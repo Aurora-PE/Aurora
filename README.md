@@ -1,26 +1,20 @@
-# SocialApp
+# Aurora
 
 ## Team
-- **Team Name:** [Your team name]
+- **Team Name:** Aurora
 - **Members:**
-  - [Member 1 Name] - User & Profile Management
-  - [Member 2 Name] - Posts & Feed Management
-  - [Member 3 Name] - Notifications & Messaging
+  - Stinga Alexandru-Ionut - User & Profile Management
+  - Dinca Mario-Bogdan - Posts & Feed Management
+  - Nedelcu Stefan-Daniel - Notifications & Messaging
 
 ## Project Description
 
-SocialApp is a RESTful backend application built with Spring Boot that powers
+Aurora is a RESTful backend application built with Spring Boot that powers
 a basic social media platform. It allows users to create profiles, follow each
-other, share posts, and interact through likes and comments.
+other, create posts, and interact through likes and comments.
 
 The application is split into three independent modules: user management,
-content management, and communication. Each module is developed independently
-by a separate team member, with clear boundaries and minimal coupling between
-them.
-
-The project is an MVP focused on clean API design, solid business logic, and
-comprehensive testing. It is fully containerized with Docker and monitored via
-Prometheus and Grafana.
+content management, and communication.
 
 ### Key Features
 - **User & Profile Management** — Create and manage user profiles, follow/
@@ -48,6 +42,7 @@ All team members follow trunk-based development:
 3. Create PR and request review
 4. Address feedback
 5. Merge after approval
+   
 
 # Prerequisites
 
