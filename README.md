@@ -1,3 +1,54 @@
+# SocialApp
+
+## Team
+- **Team Name:** [Your team name]
+- **Members:**
+  - [Member 1 Name] - User & Profile Management
+  - [Member 2 Name] - Posts & Feed Management
+  - [Member 3 Name] - Notifications & Messaging
+
+## Project Description
+
+SocialApp is a RESTful backend application built with Spring Boot that powers
+a basic social media platform. It allows users to create profiles, follow each
+other, share posts, and interact through likes and comments.
+
+The application is split into three independent modules: user management,
+content management, and communication. Each module is developed independently
+by a separate team member, with clear boundaries and minimal coupling between
+them.
+
+The project is an MVP focused on clean API design, solid business logic, and
+comprehensive testing. It is fully containerized with Docker and monitored via
+Prometheus and Grafana.
+
+### Key Features
+- **User & Profile Management** — Create and manage user profiles, follow/
+  unfollow other users, and search by username
+- **Posts & Feed** — Create public or private posts, comment, like, and view
+  a personalized chronological feed of followed users
+- **Notifications** — Automatic notifications for follows, likes, and comments,
+  with read/unread tracking
+- **Direct Messaging** — Private conversations between users with message
+  read status tracking
+
+### Technical Stack
+- **Backend:** Spring Boot (Java 21)
+- **Database:** MongoDB
+- **API:** RESTful
+- **Testing:** JUnit, Mockito, Cucumber
+- **Monitoring:** Prometheus, Grafana
+- **Deployment:** Docker
+
+## Contributing
+
+All team members follow trunk-based development:
+1. Create feature branch from `main`
+2. Make changes and commit with clear messages
+3. Create PR and request review
+4. Address feedback
+5. Merge after approval
+
 # Prerequisites
 
 For using Github Codespaces, no prerequisites are mandatory.
