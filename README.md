@@ -3,14 +3,14 @@
 ## Team
 - **Team Name:** Aurora
 - **Members:**
-  - Stinga Alexandru-Ionut - User & Profile Management
+  - Stinga Alexandru-Ionut - User, Profile & Group Management
   - Dinca Mario-Bogdan - Posts & Feed Management
   - Nedelcu Stefan-Daniel - Notifications & Messaging
 
 ## Project Description
 
 Aurora is a RESTful backend application built with Spring Boot that powers
-a basic social media platform. It allows users to create profiles, follow each
+a basic social media platform. It allows users to create profiles, create groups, follow each
 other, create posts, and interact through likes and comments.
 
 The application is split into three independent modules: user management,
@@ -19,6 +19,7 @@ content management, and communication.
 ### Key Features
 - **User & Profile Management** — Create and manage user profiles, follow/
   unfollow other users, and search by username
+- **Group Management** - Create and manage groups. Implement group role-based actions: admins can invite/ kick and promote/ demote users 
 - **Posts & Feed** — Create public or private posts, comment, like, and view
   a personalized chronological feed of followed users
 - **Notifications** — Automatic notifications for follows, likes, and comments,
