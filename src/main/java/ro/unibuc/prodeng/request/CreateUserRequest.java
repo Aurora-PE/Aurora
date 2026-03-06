@@ -16,5 +16,7 @@ public record CreateUserRequest(
 
     String bio,
 
-    String avatarUrl
+    String avatarUrl,
+
+    Boolean isPrivate
 ) {}

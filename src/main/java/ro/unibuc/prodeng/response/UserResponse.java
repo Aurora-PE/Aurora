@@ -8,5 +8,6 @@ public record UserResponse(
     String email,
     String bio,
     String avatarUrl,
+    boolean isPrivate,
     LocalDateTime createdAt
 ) {}

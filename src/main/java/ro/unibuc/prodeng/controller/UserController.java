@@ -9,6 +9,7 @@ import ro.unibuc.prodeng.request.LoginRequest;
 import ro.unibuc.prodeng.request.UpdateUserRequest;
 import ro.unibuc.prodeng.response.LoginResponse;
 import ro.unibuc.prodeng.response.UserResponse;
+import ro.unibuc.prodeng.response.UserSummaryResponse;
 import ro.unibuc.prodeng.service.UserService;
 import ro.unibuc.prodeng.util.JwtUtil;
 
@@ -41,35 +42,34 @@ public class UserController {
         return ResponseEntity.ok(userService.login(request.email(), request.password()));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable String id) {
-        return ResponseEntity.ok(userService.getUserById(id));
-    }
-
     @GetMapping
-    public ResponseEntity<List<UserResponse>> searchUsers(
+    public ResponseEntity<List<UserSummaryResponse>> searchUsers(
         @RequestParam(required = false, defaultValue = "") String username
     ) {
         return ResponseEntity.ok(userService.searchUsersByUsername(username));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(
-            @RequestHeader(value = "Authorization", required = false) String authHeader,
-            @PathVariable String id,
-            @RequestBody UpdateUserRequest request) {
-        
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getUserById(
+            @RequestHeader("Authorization") String authHeader,
+            @PathVariable String id) {
         String requesterId = JwtUtil.extractRequesterId(authHeader);
-        return ResponseEntity.ok(userService.updateUser(requesterId, id, request));
+        return ResponseEntity.ok(userService.getUserById(requesterId, id));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(
-            @RequestHeader(value = "Authorization", required = false) String authHeader,
-            @PathVariable String id) {
-        
+    @PutMapping("/self")
+    public ResponseEntity<UserResponse> updateMyProfile(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody UpdateUserRequest request) {
         String requesterId = JwtUtil.extractRequesterId(authHeader);
-        userService.deleteUser(requesterId, id);
+        return ResponseEntity.ok(userService.updateUser(requesterId, request));
+    }
+
+    @DeleteMapping("/self")
+    public ResponseEntity<Void> deleteMyProfile(
+            @RequestHeader("Authorization") String authHeader) {
+        String requesterId = JwtUtil.extractRequesterId(authHeader);
+        userService.deleteUser(requesterId);
         return ResponseEntity.noContent().build();
     }
 

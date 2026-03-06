@@ -12,9 +12,10 @@ public record UserEntity(
     String passwordHash,
     String bio,
     String avatarUrl,
-    LocalDateTime createdAt
+    LocalDateTime createdAt,
+    Boolean isPrivate
 ) {
-    public UserEntity(String username, String email, String passwordHash, String bio, String avatarUrl) {
-        this(null, username, email, passwordHash, bio, avatarUrl, LocalDateTime.now());
+    public UserEntity(String username, String email, String passwordHash, String bio, String avatarUrl, Boolean isPrivate) {
+        this(null, username, email, passwordHash, bio, avatarUrl, LocalDateTime.now(), isPrivate);
     }
 }

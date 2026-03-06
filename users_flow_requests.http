@@ -1,0 +1,114 @@
+# You can use this file to easily send requests to your API.
+# Prerequisite: humao.rest-client Vscode plugin
+# TIP: Run requests in order - later requests reference IDs from earlier responses
+
+# ==========================================
+# Create Users & Login
+# ==========================================
+
+### Create First User (Public Profile)
+# @name createUser1
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "securepassword123",
+  "bio": "Software Engineer",
+  "avatarUrl": "https://example.com/avatar1.jpg",
+  "isPrivate": false
+}
+
+### Create Second User (Private Profile)
+# @name createUser2
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "janedoe",
+  "email": "jane@example.com",
+  "password": "securepassword456",
+  "bio": "Graphic Designer",
+  "isPrivate": true
+}
+
+### Login First User
+# @name loginUser1
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "securepassword123"
+}
+
+### Login Second User
+# @name loginUser2
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "jane@example.com",
+  "password": "securepassword456"
+}
+
+
+# ==========================================
+# Search & Privacy & Follow Flows
+# ==========================================
+
+### Search Users by Username (Public - Returns only Summaries)
+GET http://localhost:8080/api/users?username=j
+
+### User 1 tries to view User 2's Profile (SHOULD FAIL: 401 Unauthorized - Jane is private)
+GET http://localhost:8080/api/users/{{createUser2.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### User 1 FOLLOWS User 2 (SUCCESS: 201 Created)
+POST http://localhost:8080/api/users/{{createUser2.response.body.id}}/follow
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Get User 1's Following List (Should contain User 2)
+GET http://localhost:8080/api/users/following
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Get User 2's Followers List (Should contain User 1)
+GET http://localhost:8080/api/users/followers
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### User 1 tries to view User 2's Profile (SHOULD SUCCEED - John now follows Jane)
+GET http://localhost:8080/api/users/{{createUser2.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### User 1 UNFOLLOWS User 2 (SUCCESS)
+DELETE http://localhost:8080/api/users/{{createUser2.response.body.id}}/unfollow
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### User 1 tries to view User 2's Profile AGAIN (SHOULD FAIL - John unfollowed Jane)
+GET http://localhost:8080/api/users/{{createUser2.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+
+# ==========================================
+# Self Operations
+# ==========================================
+
+### Update First User (SUCCESS: Using /self and their own token)
+PUT http://localhost:8080/api/users/self
+Content-Type: application/json
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+{
+  "bio": "Senior Software Engineer",
+  "avatarUrl": "https://example.com/new_avatar.jpg",
+  "isPrivate": false
+}
+
+### Delete Second User (SUCCESS: Using /self and their own token)
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Delete First User (SUCCESS: Using /self and their own token)
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginUser1.response.body.token}}

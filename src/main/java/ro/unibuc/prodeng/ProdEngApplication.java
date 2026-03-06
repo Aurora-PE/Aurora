@@ -28,7 +28,7 @@ public class ProdEngApplication {
 	@PostConstruct
 	public void runAfterObjectCreated() {
 		if (userRepository.findByEmail("frodo@theshire.me").isEmpty()) {
-			CreateUserRequest userRequest = new CreateUserRequest("Frodo Baggins", "frodo@theshire.me", "bestPasswordInTheWorld22", null, null);
+			CreateUserRequest userRequest = new CreateUserRequest("Frodo Baggins", "frodo@theshire.me", "bestPasswordInTheWorld22", null, null, true);
 			userService.createUser(userRequest);
 		}
 	}
