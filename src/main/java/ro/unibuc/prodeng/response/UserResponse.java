@@ -1,7 +1,12 @@
 package ro.unibuc.prodeng.response;
 
+import java.time.LocalDateTime;
+
 public record UserResponse(
     String id,
-    String name,
-    String email
+    String username,
+    String email,
+    String bio,
+    String avatarUrl,
+    LocalDateTime createdAt
 ) {}

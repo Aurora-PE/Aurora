@@ -9,92 +9,85 @@
 # User Controller Endpoints
 # ==========================================
 
-### Get all users
-GET http://localhost:8080/api/users
-
-### Create a new user (run this to populate variables for other requests)
-# @name createUser
+### Create First User
+# @name createUser1
 POST http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-    "name": "Jean Valjean",
-    "email": "prisoner24601@france.fr"
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "securepassword123",
+  "bio": "Software Engineer",
+  "avatarUrl": "https://example.com/avatar1.jpg"
 }
 
-### Get user by ID (uses ID from createUser response)
-GET http://localhost:8080/api/users/{{createUser.response.body.id}}
-
-### Get user by email (uses email from createUser response)
-GET http://localhost:8080/api/users/by-email?email={{createUser.response.body.email}}
-
-### Update user name (PUT)
-PUT http://localhost:8080/api/users/{{createUser.response.body.id}}
+### Create Second User
+# @name createUser2
+POST http://localhost:8080/api/users
 Content-Type: application/json
 
 {
-    "name": "Monsieur Madeleine"
+  "username": "janedoe",
+  "email": "jane@example.com",
+  "password": "securepassword456",
+  "bio": "Graphic Designer"
 }
 
-### Change user name (PATCH)
-PATCH http://localhost:8080/api/users/{{createUser.response.body.id}}/name
-Content-Type: application/json
+### Get User by ID (Public)
+GET http://localhost:8080/api/users/{{createUser1.response.body.id}}
 
-{
-    "name": "Monsieur le Maire"
-}
+### Search User by Username (Public)
+GET http://localhost:8080/api/users?username=j
 
 
 # ==========================================
-# Todo Controller Endpoints
+# Auth & Protected Endpoints
 # ==========================================
 
-### Create a new todo (run this after createUser to populate variables)
-# @name createTodo
-POST http://localhost:8080/api/todos
+### Login First User (Generates JWT)
+# @name loginUser1
+POST http://localhost:8080/api/users/login
 Content-Type: application/json
 
 {
-    "description": "Rescue Cosette from the Thénardiers",
-    "assigneeEmail": "{{createUser.response.body.email}}"
+  "email": "john@example.com",
+  "password": "securepassword123"
 }
 
-### Get todos by assignee email
-GET http://localhost:8080/api/todos?assigneeEmail={{createUser.response.body.email}}
-
-### Get todo by ID (uses ID from createTodo response)
-GET http://localhost:8080/api/todos/{{createTodo.response.body.id}}
-
-### Mark todo as done
-PATCH http://localhost:8080/api/todos/{{createTodo.response.body.id}}/done
-Content-Type: application/json
-
-true
-
-### Assign todo to another user
-# Note: You'll need another user to exist for this to work
-PATCH http://localhost:8080/api/todos/{{createTodo.response.body.id}}/assignee
+### Login Second User (Generates JWT)
+# @name loginUser2
+POST http://localhost:8080/api/users/login
 Content-Type: application/json
 
 {
-    "newAssigneeEmail": "frodo@theshire.me"
+  "email": "jane@example.com",
+  "password": "securepassword456"
 }
 
-### Edit todo description
-PATCH http://localhost:8080/api/todos/{{createTodo.response.body.id}}/description
+### Update First User (SUCCESS: using their own token)
+PUT http://localhost:8080/api/users/{{createUser1.response.body.id}}
 Content-Type: application/json
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 {
-    "description": "Escape from Inspector Javert"
+  "bio": "Senior Software Engineer",
+  "avatarUrl": "https://example.com/new_avatar.jpg"
 }
 
+### Update Second User using First User's token (SHOULD FAIL with 401 Unauthorized)
+PUT http://localhost:8080/api/users/{{createUser2.response.body.id}}
+Content-Type: application/json
+Authorization: Bearer {{loginUser1.response.body.token}}
 
-# ==========================================
-# Cleanup (run these last)
-# ==========================================
+{
+  "bio": "I am hacking Jane's account"
+}
 
-### Delete todo
-DELETE http://localhost:8080/api/todos/{{createTodo.response.body.id}}
+### Delete First User (SUCCESS: using their own token)
+DELETE http://localhost:8080/api/users/{{createUser1.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
 
-### Delete user
-DELETE http://localhost:8080/api/users/{{createUser.response.body.id}}
+### Delete Second User (SUCCESS: using their own token)
+DELETE http://localhost:8080/api/users/{{createUser2.response.body.id}}
+Authorization: Bearer {{loginUser2.response.body.token}}
