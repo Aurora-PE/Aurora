@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import ro.unibuc.prodeng.exception.BadCredentialsException;
 import ro.unibuc.prodeng.exception.EntityNotFoundException;
 import ro.unibuc.prodeng.exception.UnauthorizedException;
-import ro.unibuc.prodeng.model.FollowEntity;
 import ro.unibuc.prodeng.model.UserEntity;
 import ro.unibuc.prodeng.repository.FollowRepository;
 import ro.unibuc.prodeng.repository.UserRepository;
@@ -51,7 +50,6 @@ public class UserService {
         return toResponse(targetUser);
     }
 
-    // 2. SEARCH ONLY RETURNS SUMMARIES
     public List<UserSummaryResponse> searchUsersByUsername(String username) {
         return userRepository.findByUsernameContainingIgnoreCase(username).stream()
             .map(user -> new UserSummaryResponse(user.id(), user.username(), user.avatarUrl()))
