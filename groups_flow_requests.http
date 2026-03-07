@@ -1,0 +1,122 @@
+# ==========================================
+# Setup
+# ==========================================
+
+### Create User A (Group Creator)
+# @name createAdmin
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "groupadmin",
+  "email": "admin@groups.com",
+  "password": "password123",
+  "bio": "I make groups",
+  "isPrivate": false
+}
+
+### Create User B (The Invitee)
+# @name createInvitee
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "groupmember",
+  "email": "member@groups.com",
+  "password": "password123",
+  "bio": "I join groups",
+  "isPrivate": false
+}
+
+### Login User A
+# @name loginOwner
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "admin@groups.com",
+  "password": "password123"
+}
+
+### Login User B
+# @name loginInvitee
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "member@groups.com",
+  "password": "password123"
+}
+
+# ==========================================
+# Group Management Flow
+# ==========================================
+
+### Create a Group (User A)
+# @name createGroup
+POST http://localhost:8080/api/groups
+Authorization: Bearer {{loginOwner.response.body.token}}
+Content-Type: application/json
+
+{
+  "name": "Spring Boot Hackers",
+  "description": "We hate God classes."
+}
+
+### Get All Your Groups 
+GET http://localhost:8080/api/groups
+Authorization: Bearer {{loginOwner.response.body.token}}
+
+### Get Specific Group
+GET http://localhost:8080/api/groups/{{createGroup.response.body.id}}
+
+
+# ==========================================
+# Invitation Flow
+# ==========================================
+
+### User A invites User B to the Group
+# @name inviteUser
+POST http://localhost:8080/api/groups/{{createGroup.response.body.id}}/invitations
+Authorization: Bearer {{loginOwner.response.body.token}}
+Content-Type: application/json
+
+{
+  "inviteeId": "{{createInvitee.response.body.id}}"
+}
+
+### User B checks their pending invitations
+# @name getMyInvites
+GET http://localhost:8080/api/groups/invitations
+Authorization: Bearer {{loginInvitee.response.body.token}}
+
+### User B ACCEPTs the invitation (Will delete the invite and return 200 OK)
+POST http://localhost:8080/api/groups/invitations/{{getMyInvites.response.body.$[0].id}}/accept
+Authorization: Bearer {{loginInvitee.response.body.token}}
+Content-Length: 0
+
+### User B DECLINEs the invitation (Will delete the invite and return 200 OK)
+POST http://localhost:8080/api/groups/invitations/{{getMyInvites.response.body.$[0].id}}/decline
+Authorization: Bearer {{loginInvitee.response.body.token}}
+Content-Length: 0
+
+### User B checks invites again (Should be empty now!)
+GET http://localhost:8080/api/groups/invitations
+Authorization: Bearer {{loginInvitee.response.body.token}}
+
+
+# ==========================================
+# Cleanup
+# ==========================================
+
+### Delete the Group (User A)
+DELETE http://localhost:8080/api/groups/{{createGroup.response.body.id}}
+Authorization: Bearer {{loginOwner.response.body.token}}
+
+### Delete Second User (SUCCESS: Using /self and their own token)
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginInvitee.response.body.token}}
+
+### Delete First User (SUCCESS: Using /self and their own token)
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginOwner.response.body.token}}
