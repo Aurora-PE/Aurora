@@ -7,7 +7,9 @@ import ro.unibuc.prodeng.exception.EntityNotFoundException;
 import ro.unibuc.prodeng.exception.UnauthorizedException;
 import ro.unibuc.prodeng.model.GroupEntity;
 import ro.unibuc.prodeng.model.GroupInvitationEntity;
+import ro.unibuc.prodeng.model.GroupMemberEntity;
 import ro.unibuc.prodeng.repository.GroupInvitationRepository;
+import ro.unibuc.prodeng.repository.GroupMemberRepository;
 import ro.unibuc.prodeng.repository.GroupRepository;
 import ro.unibuc.prodeng.repository.UserRepository;
 import ro.unibuc.prodeng.request.CreateInviteRequest;
@@ -15,14 +17,16 @@ import ro.unibuc.prodeng.response.GroupInvitationResponse;
 
 @Service
 public class GroupInvitationService {
-    private final GroupRepository groupRepository;
+   private final GroupRepository groupRepository;
     private final GroupInvitationRepository invitationRepository;
     private final UserRepository userRepository;
+    private final GroupMemberService groupMemberService;
 
-    public GroupInvitationService(GroupRepository groupRepository, GroupInvitationRepository invitationRepository, UserRepository userRepository) {
+    public GroupInvitationService(GroupRepository groupRepository, GroupInvitationRepository invitationRepository, UserRepository userRepository, GroupMemberService groupMemberService) {
         this.groupRepository = groupRepository;
         this.invitationRepository = invitationRepository;
         this.userRepository = userRepository;
+        this.groupMemberService = groupMemberService;
     }
 
     public GroupInvitationResponse createInvitation(String requesterId, String groupId, CreateInviteRequest request) {
@@ -34,7 +38,7 @@ public class GroupInvitationService {
         }
 
         if (!userRepository.existsById(request.inviteeId())) {
-            throw new EntityNotFoundException("Target user not found.");
+            throw new EntityNotFoundException("User "+ request.inviteeId());
         }
 
         if (invitationRepository.existsByGroupIdAndInviteeId(groupId, request.inviteeId())) {
@@ -50,10 +54,9 @@ public class GroupInvitationService {
             .stream().map(this::toResponse).collect(Collectors.toList());
     }
 
-    public void acceptInvitation(String requesterId, String invitationId) {
+   public void acceptInvitation(String requesterId, String invitationId) {
         GroupInvitationEntity inv = getAndValidateInvitation(requesterId, invitationId);
-        
-        // TODO: Create GroupMember Logic
+        groupMemberService.addMemberToGroup(inv.groupId(), requesterId, GroupMemberEntity.Role.MEMBER);
         
         invitationRepository.deleteById(inv.id());
     }
