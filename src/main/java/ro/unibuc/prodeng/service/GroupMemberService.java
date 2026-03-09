@@ -19,11 +19,13 @@ public class GroupMemberService {
     private final GroupMemberRepository groupMemberRepository;
     private final GroupRepository groupRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
-    public GroupMemberService(GroupMemberRepository groupMemberRepository, GroupRepository groupRepository, UserRepository userRepository) {
+    public GroupMemberService(GroupMemberRepository groupMemberRepository, GroupRepository groupRepository, UserRepository userRepository, NotificationService notificationService) {
         this.groupMemberRepository = groupMemberRepository;
         this.groupRepository = groupRepository;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
     public void addMemberToGroup(String groupId, String userId, GroupMemberEntity.Role role) {
@@ -82,6 +84,8 @@ public class GroupMemberService {
             throw new UnauthorizedException("Admins cannot kick other admins.");
         }
 
+        notificationService.createNotification(targetUserId, "You have been kicked from the group " + group.name(), requesterId);
+
         groupMemberRepository.delete(member);
     }
 
@@ -110,6 +114,9 @@ public class GroupMemberService {
         GroupMemberEntity updatedMember = new GroupMemberEntity(
             member.id(), member.groupId(), member.userId(), roleEnum, member.joinedAt()
         );
+
+        notificationService.createNotification(targetUserId, "You have been made " + roleEnum.toString() + " in group " + group.name(), requesterId);
+
         groupMemberRepository.save(updatedMember);
     }
 

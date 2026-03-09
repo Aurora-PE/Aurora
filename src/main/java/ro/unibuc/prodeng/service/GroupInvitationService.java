@@ -8,6 +8,7 @@ import ro.unibuc.prodeng.exception.UnauthorizedException;
 import ro.unibuc.prodeng.model.GroupEntity;
 import ro.unibuc.prodeng.model.GroupInvitationEntity;
 import ro.unibuc.prodeng.model.GroupMemberEntity;
+import ro.unibuc.prodeng.model.UserEntity;
 import ro.unibuc.prodeng.repository.GroupInvitationRepository;
 import ro.unibuc.prodeng.repository.GroupMemberRepository;
 import ro.unibuc.prodeng.repository.GroupRepository;
@@ -21,12 +22,14 @@ public class GroupInvitationService {
     private final GroupInvitationRepository invitationRepository;
     private final UserRepository userRepository;
     private final GroupMemberService groupMemberService;
+    private final NotificationService notificationService;
 
-    public GroupInvitationService(GroupRepository groupRepository, GroupInvitationRepository invitationRepository, UserRepository userRepository, GroupMemberService groupMemberService) {
+    public GroupInvitationService(GroupRepository groupRepository, GroupInvitationRepository invitationRepository, UserRepository userRepository, GroupMemberService groupMemberService, NotificationService notificationService) {
         this.groupRepository = groupRepository;
         this.invitationRepository = invitationRepository;
         this.userRepository = userRepository;
         this.groupMemberService = groupMemberService;
+        this.notificationService = notificationService;
     }
 
     public GroupInvitationResponse createInvitation(String requesterId, String groupId, CreateInviteRequest request) {
@@ -46,6 +49,9 @@ public class GroupInvitationService {
         }
 
         GroupInvitationEntity invitation = new GroupInvitationEntity(groupId, requesterId, request.inviteeId());
+
+        notificationService.createNotification(request.inviteeId(), "You have been invited to group " + group.name(), requesterId);
+
         return toResponse(invitationRepository.save(invitation));
     }
 
@@ -59,6 +65,13 @@ public class GroupInvitationService {
         groupMemberService.addMemberToGroup(inv.groupId(), requesterId, GroupMemberEntity.Role.MEMBER);
         
         invitationRepository.deleteById(inv.id());
+
+        GroupEntity group = groupRepository.findById(inv.groupId())
+            .orElseThrow(() -> new EntityNotFoundException("Group " + inv.groupId()));
+
+        UserEntity requesterUser = userRepository.findById(requesterId).get();
+
+        notificationService.createNotification(group.creatorId(), "User " + requesterUser.username() + " has joined the group " + group.name(), requesterId);
     }
 
     public void declineInvitation(String requesterId, String invitationId) {
