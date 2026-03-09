@@ -12,4 +12,6 @@ public interface FollowRepository extends MongoRepository<FollowEntity, String> 
     void deleteByFollowerIdAndFollowingId(String followerId, String followingId);
     List<FollowEntity> findByFollowingId(String followingId);
     List<FollowEntity> findByFollowerId(String followerId);
+    void deleteByFollowerId(String followerId);
+    void deleteByFollowingId(String followingId);
 }

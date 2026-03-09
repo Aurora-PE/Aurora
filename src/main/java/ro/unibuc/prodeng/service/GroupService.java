@@ -1,12 +1,15 @@
 package ro.unibuc.prodeng.service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
-
+import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
 import ro.unibuc.prodeng.exception.EntityNotFoundException;
 import ro.unibuc.prodeng.exception.UnauthorizedException;
 import ro.unibuc.prodeng.model.GroupEntity;
+import ro.unibuc.prodeng.model.GroupMemberEntity;
+import ro.unibuc.prodeng.repository.GroupInvitationRepository;
+import ro.unibuc.prodeng.repository.GroupMemberRepository;
 import ro.unibuc.prodeng.repository.GroupRepository;
 import ro.unibuc.prodeng.request.CreateGroupRequest;
 import ro.unibuc.prodeng.response.GroupResponse;
@@ -14,10 +17,14 @@ import ro.unibuc.prodeng.response.GroupResponse;
 @Service
 public class GroupService {
 
-    private final GroupRepository groupRepository;
+  private final GroupRepository groupRepository;
+    private final GroupMemberRepository groupMemberRepository;
+    private final GroupInvitationRepository groupInvitationRepository;
 
-    public GroupService(GroupRepository groupRepository) {
+    public GroupService(GroupRepository groupRepository, GroupMemberRepository groupMemberRepository, GroupInvitationRepository groupInvitationRepository) {
         this.groupRepository = groupRepository;
+        this.groupMemberRepository = groupMemberRepository;
+        this.groupInvitationRepository = groupInvitationRepository;
     }
 
     public GroupResponse createGroup(String requesterId, CreateGroupRequest request) {
@@ -35,7 +42,19 @@ public class GroupService {
     }
 
     public List<GroupResponse> getMyGroups(String requesterId) {
-        return groupRepository.findByCreatorId(requesterId).stream()
+        List<GroupEntity> createdGroups = groupRepository.findByCreatorId(requesterId);
+
+        List<String> memberGroupIds = groupMemberRepository.findByUserId(requesterId).stream()
+            .map(GroupMemberEntity::groupId)
+            .collect(Collectors.toList());
+
+        List<GroupEntity> memberGroups = (List<GroupEntity>) groupRepository.findAllById(memberGroupIds);
+
+        Set<String> uniqueGroupIds = Stream.concat(createdGroups.stream(), memberGroups.stream())
+            .map(GroupEntity::id)
+            .collect(Collectors.toSet());
+
+        return ((List<GroupEntity>) groupRepository.findAllById(uniqueGroupIds)).stream()
             .map(this::toResponse)
             .collect(Collectors.toList());
     }
@@ -46,7 +65,8 @@ public class GroupService {
         if (!group.creatorId().equals(requesterId)) {
             throw new UnauthorizedException("Only the group creator can delete this group.");
         }
-        
+        groupMemberRepository.deleteByGroupId(groupId);
+        groupInvitationRepository.deleteByGroupId(groupId);
         groupRepository.deleteById(groupId);
     }
 

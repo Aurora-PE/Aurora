@@ -28,7 +28,7 @@ public class FollowService {
             throw new IllegalArgumentException("You cannot follow yourself.");
         }
         if (!userRepository.existsById(targetUserId)) {
-            throw new EntityNotFoundException("User not found.");
+            throw new EntityNotFoundException("User "+ targetUserId);
         }
         if (followRepository.existsByFollowerIdAndFollowingId(requesterId, targetUserId)) {
             throw new IllegalArgumentException("You are already following this user.");
