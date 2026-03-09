@@ -18,4 +18,6 @@ public interface PostRepository extends MongoRepository<PostEntity, String> {
     List<PostEntity> findByAuthorIdInOrderByLocalDateTimeDesc(
         List<String> authorIds
     );
+
+    void deleteByAuthorId(String authorId);
 }

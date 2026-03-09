@@ -41,7 +41,7 @@ public class PostService {
         PostEntity post = postRepository.findById(id)
             .orElseThrow(() ->
                 new EntityNotFoundException(
-                    "Post not found: " + id
+                    "Post " + id
                 )
             );
         return toResponse(post);
@@ -60,7 +60,7 @@ public class PostService {
         PostEntity existing = postRepository.findById(id)
             .orElseThrow(() ->
                 new EntityNotFoundException(
-                    "Post not found: " + id
+                    "Post " + id
                 )
             );
 
@@ -82,7 +82,7 @@ public class PostService {
         PostEntity post = postRepository.findById(id)
             .orElseThrow(() ->
                 new EntityNotFoundException(
-                    "Post not found: " + id
+                    "Post " + id
                 )
             );
 
