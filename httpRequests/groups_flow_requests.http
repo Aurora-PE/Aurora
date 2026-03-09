@@ -90,7 +90,7 @@ Content-Type: application/json
 GET http://localhost:8080/api/groups/invitations
 Authorization: Bearer {{loginInvitee.response.body.token}}
 
-### User B ACCEPTs the invitation (Will delete the invite and return 200 OK)
+### User B ACCEPTs the invitation (Will delete the invite and add them to group)
 POST http://localhost:8080/api/groups/invitations/{{getMyInvites.response.body.$[0].id}}/accept
 Authorization: Bearer {{loginInvitee.response.body.token}}
 Content-Length: 0
@@ -102,6 +102,35 @@ Content-Length: 0
 
 ### User B checks invites again (Should be empty now!)
 GET http://localhost:8080/api/groups/invitations
+Authorization: Bearer {{loginInvitee.response.body.token}}
+
+# ==========================================
+# Group Member Flow
+# ==========================================
+
+### View All Members (User A or B can do this)
+GET http://localhost:8080/api/groups/{{createGroup.response.body.id}}/members
+Authorization: Bearer {{loginOwner.response.body.token}}
+
+### Promote User B to ADMIN (Only User A / Creator can do this)
+PATCH http://localhost:8080/api/groups/{{createGroup.response.body.id}}/members/{{createInvitee.response.body.id}}/role
+Authorization: Bearer {{loginOwner.response.body.token}}
+Content-Type: application/json
+
+{
+  "role": "ADMIN"
+}
+
+### Verify Role Change (Check members list again)
+GET http://localhost:8080/api/groups/{{createGroup.response.body.id}}/members
+Authorization: Bearer {{loginOwner.response.body.token}}
+
+### Kick User B out of the Group
+DELETE http://localhost:8080/api/groups/{{createGroup.response.body.id}}/members/{{createInvitee.response.body.id}}
+Authorization: Bearer {{loginOwner.response.body.token}}
+
+### Verify Kick (Throws an error for User B)
+GET http://localhost:8080/api/groups/{{createGroup.response.body.id}}/members
 Authorization: Bearer {{loginInvitee.response.body.token}}
 
 

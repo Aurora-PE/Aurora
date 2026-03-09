@@ -6,8 +6,14 @@ import org.springframework.stereotype.Service;
 import ro.unibuc.prodeng.exception.BadCredentialsException;
 import ro.unibuc.prodeng.exception.EntityNotFoundException;
 import ro.unibuc.prodeng.exception.UnauthorizedException;
+import ro.unibuc.prodeng.model.GroupEntity;
+import ro.unibuc.prodeng.model.GroupMemberEntity;
 import ro.unibuc.prodeng.model.UserEntity;
 import ro.unibuc.prodeng.repository.FollowRepository;
+import ro.unibuc.prodeng.repository.GroupInvitationRepository;
+import ro.unibuc.prodeng.repository.GroupMemberRepository;
+import ro.unibuc.prodeng.repository.GroupRepository;
+import ro.unibuc.prodeng.repository.NotificationRepository;
 import ro.unibuc.prodeng.repository.UserRepository;
 import ro.unibuc.prodeng.request.CreateUserRequest;
 import ro.unibuc.prodeng.request.UpdateUserRequest;
@@ -23,15 +29,25 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    @Autowired
-    private final UserRepository userRepository;
-
-    @Autowired
+   private final UserRepository userRepository;
     private final FollowRepository followRepository;
+    private final GroupRepository groupRepository;
+    private final GroupMemberRepository groupMemberRepository;
+    private final GroupInvitationRepository groupInvitationRepository;
+    private final NotificationRepository notificationRepository;
 
-    public UserService(UserRepository userRepository, FollowRepository followRepository) {
+    public UserService(UserRepository userRepository, 
+                       FollowRepository followRepository,
+                       GroupRepository groupRepository,
+                       GroupMemberRepository groupMemberRepository,
+                       GroupInvitationRepository groupInvitationRepository,
+                       NotificationRepository notificationRepository) {
         this.userRepository = userRepository;
-        this.followRepository= followRepository;
+        this.followRepository = followRepository;
+        this.groupRepository = groupRepository;
+        this.groupMemberRepository = groupMemberRepository;
+        this.groupInvitationRepository = groupInvitationRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     public UserResponse getUserById(String requesterId, String targetId) {
@@ -78,6 +94,33 @@ public class UserService {
         if (!userRepository.existsById(requesterId)) {
             throw new EntityNotFoundException("User");
         }
+        followRepository.deleteByFollowerId(requesterId);
+        followRepository.deleteByFollowingId(requesterId);
+        groupInvitationRepository.deleteByInviterId(requesterId);
+        groupInvitationRepository.deleteByInviteeId(requesterId);
+        List<GroupEntity> ownedGroups = groupRepository.findByCreatorId(requesterId);
+        for (GroupEntity group : ownedGroups) {
+            List<GroupMemberEntity> members = groupMemberRepository.findByGroupId(group.id());
+            
+            java.util.Optional<GroupMemberEntity> newOwnerOpt = members.stream()
+                .filter(m -> !m.userId().equals(requesterId))
+                .min(java.util.Comparator.comparing(GroupMemberEntity::role)); 
+
+            if (newOwnerOpt.isPresent()) {
+                GroupEntity updatedGroup = new GroupEntity(
+                    group.id(), group.name(), group.description(), newOwnerOpt.get().userId(), group.createdAt()
+                );
+                groupRepository.save(updatedGroup);
+            } else {
+                groupInvitationRepository.deleteByGroupId(group.id());
+                groupMemberRepository.deleteByGroupId(group.id());
+                groupRepository.deleteById(group.id());
+            }
+        }
+        groupMemberRepository.deleteByUserId(requesterId);
+
+        notificationRepository.deleteByUserId(requesterId);
+
         userRepository.deleteById(requesterId);
     }
 

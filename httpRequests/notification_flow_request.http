@@ -1,0 +1,163 @@
+# ==========================================
+# Notifications
+# ==========================================
+
+### Create First User
+# @name createUser1
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "securepassword123",
+  "bio": "Software Engineer",
+  "avatarUrl": "https://example.com/avatar1.jpg",
+  "isPrivate": false
+}
+
+### Create Second User
+# @name createUser2
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "janedoe",
+  "email": "jane@example.com",
+  "password": "securepassword456",
+  "bio": "Graphic Designer",
+  "isPrivate": true
+}
+
+### Login First User
+# @name loginUser1
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "securepassword123"
+}
+
+### Login Second User
+# @name loginUser2
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "jane@example.com",
+  "password": "securepassword456"
+}
+
+# ==========================================
+# Follow Notification
+# ==========================================
+
+### User1 follows User2
+POST http://localhost:8080/api/users/{{createUser2.response.body.id}}/follow
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Get User2 notifications
+# @name user2Notifications
+GET http://localhost:8080/api/notifications/all
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Get User2 unread notifications
+# @name user2Unread
+GET http://localhost:8080/api/notifications/unread
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Mark first notification as read
+PATCH http://localhost:8080/api/notifications/{{user2Unread.response.body.$[0].id}}/read
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+# ==========================================
+# Group notifications
+# ==========================================
+
+### User1 creates a group
+# @name createGroup
+POST http://localhost:8080/api/groups
+Authorization: Bearer {{loginUser1.response.body.token}}
+Content-Type: application/json
+
+{
+  "name": "Test Group",
+  "description": "Group used for notification testing"
+}
+
+### User1 invites User2
+POST http://localhost:8080/api/groups/{{createGroup.response.body.id}}/invitations
+Authorization: Bearer {{loginUser1.response.body.token}}
+Content-Type: application/json
+
+{
+  "inviteeId": "{{createUser2.response.body.id}}"
+}
+
+### User2 gets invitations
+# @name getInvites
+GET http://localhost:8080/api/groups/invitations
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Check User2 notifications (should include invite)
+GET http://localhost:8080/api/notifications/all
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### User2 accepts invitation
+POST http://localhost:8080/api/groups/invitations/{{getInvites.response.body.$[0].id}}/accept
+Authorization: Bearer {{loginUser2.response.body.token}}
+Content-Length: 0
+
+### Check User1 notifications (invite accepted)
+GET http://localhost:8080/api/notifications/all
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Promote User2 to ADMIN
+PATCH http://localhost:8080/api/groups/{{createGroup.response.body.id}}/members/{{createUser2.response.body.id}}/role
+Authorization: Bearer {{loginUser1.response.body.token}}
+Content-Type: application/json
+
+{
+  "role": "ADMIN"
+}
+
+### Check User2 notifications (role change)
+GET http://localhost:8080/api/notifications/all
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Kick User2
+DELETE http://localhost:8080/api/groups/{{createGroup.response.body.id}}/members/{{createUser2.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Check User2 notifications (kick notification)
+GET http://localhost:8080/api/notifications/all
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Delete the group
+DELETE http://localhost:8080/api/groups/{{createGroup.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Check User2 notifications again
+GET http://localhost:8080/api/notifications/all
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Mark All Notifications Read
+PATCH http://localhost:8080/api/notifications/read-all
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Verify no unread notifications
+GET http://localhost:8080/api/notifications/unread
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+# ==========================================
+# Cleanup
+# ==========================================
+
+### Delete Second User (SUCCESS: Using /self and their own token)
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Delete First User (SUCCESS: Using /self and their own token)
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginUser1.response.body.token}}
