@@ -14,6 +14,7 @@ import ro.unibuc.prodeng.repository.GroupInvitationRepository;
 import ro.unibuc.prodeng.repository.GroupMemberRepository;
 import ro.unibuc.prodeng.repository.GroupRepository;
 import ro.unibuc.prodeng.repository.NotificationRepository;
+import ro.unibuc.prodeng.repository.PostRepository;
 import ro.unibuc.prodeng.repository.UserRepository;
 import ro.unibuc.prodeng.request.CreateUserRequest;
 import ro.unibuc.prodeng.request.UpdateUserRequest;
@@ -35,19 +36,22 @@ public class UserService {
     private final GroupMemberRepository groupMemberRepository;
     private final GroupInvitationRepository groupInvitationRepository;
     private final NotificationRepository notificationRepository;
+    private final PostRepository postRepository;
 
     public UserService(UserRepository userRepository, 
                        FollowRepository followRepository,
                        GroupRepository groupRepository,
                        GroupMemberRepository groupMemberRepository,
                        GroupInvitationRepository groupInvitationRepository,
-                       NotificationRepository notificationRepository) {
+                       NotificationRepository notificationRepository,
+                    PostRepository postRepository) {
         this.userRepository = userRepository;
         this.followRepository = followRepository;
         this.groupRepository = groupRepository;
         this.groupMemberRepository = groupMemberRepository;
         this.groupInvitationRepository = groupInvitationRepository;
         this.notificationRepository = notificationRepository;
+        this.postRepository = postRepository;
     }
 
     public UserResponse getUserById(String requesterId, String targetId) {
@@ -120,6 +124,8 @@ public class UserService {
         groupMemberRepository.deleteByUserId(requesterId);
 
         notificationRepository.deleteByUserId(requesterId);
+
+        postRepository.deleteByAuthorId(requesterId);
 
         userRepository.deleteById(requesterId);
     }

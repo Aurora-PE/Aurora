@@ -1,0 +1,126 @@
+# You can use this file to easily send requests to your API.
+# Prerequisite: humao.rest-client Vscode plugin
+# TIP: Run requests in order - later requests reference IDs from earlier responses
+
+# ==========================================
+# Create Posts
+# ==========================================
+
+### Create First Post (PUBLIC)
+# @name createPost1
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+  "authorId": "user1",
+  "content": "My first public post!",
+  "imageUrl": "https://example.com/image1.png",
+  "visibility": "PUBLIC"
+}
+
+### Create Second Post (PRIVATE, no image)
+# @name createPost2
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+  "authorId": "user1",
+  "content": "This is a private thought",
+  "imageUrl": null,
+  "visibility": "PRIVATE"
+}
+
+### Create Third Post (PUBLIC, different author)
+# @name createPost3
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+  "authorId": "user2",
+  "content": "Hello from user2!",
+  "imageUrl": "https://example.com/image2.png",
+  "visibility": "PUBLIC"
+}
+
+
+# ==========================================
+# Read Posts
+# ==========================================
+
+### Get All Posts (Should return 3 posts)
+GET http://localhost:8080/api/posts
+
+### Get First Post by ID (Should return post details)
+GET http://localhost:8080/api/posts/{{createPost1.response.body.id}}
+
+### Get Non-Existent Post (SHOULD FAIL: 404 Not Found)
+GET http://localhost:8080/api/posts/000000000000000000000000
+
+
+# ==========================================
+# Update Posts
+# ==========================================
+
+### Update First Post Content and Visibility
+PUT http://localhost:8080/api/posts/{{createPost1.response.body.id}}
+Content-Type: application/json
+
+{
+  "content": "Updated: My first post has been edited!",
+  "imageUrl": "https://example.com/updated-image.png",
+  "visibility": "PUBLIC"
+}
+
+### Update Second Post (Make it PUBLIC)
+PUT http://localhost:8080/api/posts/{{createPost2.response.body.id}}
+Content-Type: application/json
+
+{
+  "content": "No longer private!",
+  "imageUrl": null,
+  "visibility": "PUBLIC"
+}
+
+### Update Non-Existent Post (SHOULD FAIL: 404 Not Found)
+PUT http://localhost:8080/api/posts/000000000000000000000000
+Content-Type: application/json
+
+{
+  "content": "This should fail",
+  "imageUrl": null,
+  "visibility": "PUBLIC"
+}
+
+### Verify First Post Was Updated (Content should be changed)
+GET http://localhost:8080/api/posts/{{createPost1.response.body.id}}
+
+
+# ==========================================
+# Delete Posts
+# ==========================================
+
+### Delete Third Post (SUCCESS: 204 No Content)
+DELETE http://localhost:8080/api/posts/{{createPost3.response.body.id}}
+
+### Verify Third Post Was Deleted (SHOULD FAIL: 404 Not Found)
+GET http://localhost:8080/api/posts/{{createPost3.response.body.id}}
+
+### Delete Non-Existent Post (SHOULD FAIL: 404 Not Found)
+DELETE http://localhost:8080/api/posts/000000000000000000000000
+
+### Get All Posts (Should return only 2 posts now)
+GET http://localhost:8080/api/posts
+
+
+# ==========================================
+# Cleanup
+# ==========================================
+
+### Delete First Post
+DELETE http://localhost:8080/api/posts/{{createPost1.response.body.id}}
+
+### Delete Second Post
+DELETE http://localhost:8080/api/posts/{{createPost2.response.body.id}}
+
+### Verify All Deleted (Should return empty array)
+GET http://localhost:8080/api/posts
