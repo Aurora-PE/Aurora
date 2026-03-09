@@ -17,14 +17,16 @@ import ro.unibuc.prodeng.response.GroupResponse;
 @Service
 public class GroupService {
 
-  private final GroupRepository groupRepository;
+    private final GroupRepository groupRepository;
     private final GroupMemberRepository groupMemberRepository;
     private final GroupInvitationRepository groupInvitationRepository;
+    private final NotificationService notificationService;
 
-    public GroupService(GroupRepository groupRepository, GroupMemberRepository groupMemberRepository, GroupInvitationRepository groupInvitationRepository) {
+    public GroupService(GroupRepository groupRepository, GroupMemberRepository groupMemberRepository, GroupInvitationRepository groupInvitationRepository, NotificationService notificationService) {
         this.groupRepository = groupRepository;
         this.groupMemberRepository = groupMemberRepository;
         this.groupInvitationRepository = groupInvitationRepository;
+        this.notificationService = notificationService;
     }
 
     public GroupResponse createGroup(String requesterId, CreateGroupRequest request) {
@@ -65,6 +67,15 @@ public class GroupService {
         if (!group.creatorId().equals(requesterId)) {
             throw new UnauthorizedException("Only the group creator can delete this group.");
         }
+
+        List<GroupMemberEntity> members = groupMemberRepository.findByGroupId(groupId);
+
+        for (GroupMemberEntity member : members) {
+            if (!member.userId().equals(requesterId)) {
+                notificationService.createNotification(member.userId(), "The group " + group.name() + " has been deleted.", requesterId);
+            }
+        }
+
         groupMemberRepository.deleteByGroupId(groupId);
         groupInvitationRepository.deleteByGroupId(groupId);
         groupRepository.deleteById(groupId);

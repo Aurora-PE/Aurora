@@ -17,10 +17,12 @@ public class FollowService {
 
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
-    public FollowService(FollowRepository followRepository, UserRepository userRepository) {
+    public FollowService(FollowRepository followRepository, UserRepository userRepository, NotificationService notificationService) {
         this.followRepository = followRepository;
         this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
     public void followUser(String requesterId, String targetUserId) {
@@ -34,11 +36,28 @@ public class FollowService {
             throw new IllegalArgumentException("You are already following this user.");
         }
 
+        UserEntity requesterUser = userRepository.findById(requesterId).get();
+
+        notificationService.createNotification(targetUserId, "User " + requesterUser.username() + " has followed you", requesterId);
+
         followRepository.save(new FollowEntity(requesterId, targetUserId));
     }
 
     public void unfollowUser(String requesterId, String targetUserId) {
+        if (targetUserId.equals(requesterId)) {
+            throw new IllegalArgumentException("You cannot unfollow yourself.");
+        }
+
+        if (!userRepository.existsById(targetUserId)) {
+            throw new EntityNotFoundException("User "+ targetUserId);
+        }
+
+        if (!followRepository.existsByFollowerIdAndFollowingId(requesterId, targetUserId)) {
+            throw new IllegalArgumentException("You are not following this user.");
+        }
+
         followRepository.deleteByFollowerIdAndFollowingId(requesterId, targetUserId);
+
     }
 
     public List<UserSummaryResponse> getFollowers(String userId) {
