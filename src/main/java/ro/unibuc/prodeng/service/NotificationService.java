@@ -50,7 +50,7 @@ public class NotificationService {
     public NotificationResponse markNotificationRead(String requesterId, String notifId) {
         NotificationEntity notification = notificationRepository.findById(notifId)
                 .orElseThrow(() ->
-                        new EntityNotFoundException("Notification not found with id: " + notifId));
+                        new EntityNotFoundException("Notification " + notifId));
 
         if (!notification.userId().equals(requesterId)) {
                 throw new UnauthorizedException("Cannot modify another user's notification.");
