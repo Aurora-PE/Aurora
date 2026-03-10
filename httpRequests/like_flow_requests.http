@@ -1,0 +1,179 @@
+# You can use this file to easily send requests to your API.
+# Prerequisite: humao.rest-client Vscode plugin
+# TIP: Run requests in order - later requests reference IDs from earlier responses
+# NOTE: Posts, comments, and follows must exist before testing likes and feed.
+
+# ==========================================
+# Setup - Create Posts and Comments
+# ==========================================
+
+### Create Post by User1
+# @name post1
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+  "authorId": "user1",
+  "content": "User1's public post",
+  "imageUrl": "https://example.com/img1.png",
+  "visibility": "PUBLIC"
+}
+
+### Create Private Post by User1
+# @name post2
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+  "authorId": "user1",
+  "content": "User1's private post",
+  "imageUrl": null,
+  "visibility": "PRIVATE"
+}
+
+### Create Post by User2
+# @name post3
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+  "authorId": "user2",
+  "content": "User2's public post",
+  "imageUrl": null,
+  "visibility": "PUBLIC"
+}
+
+### Create Comment on Post1
+# @name comment1
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments
+Content-Type: application/json
+
+{
+  "authorId": "user2",
+  "content": "Nice post user1!"
+}
+
+### Create Second Comment on Post1
+# @name comment2
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments
+Content-Type: application/json
+
+{
+  "authorId": "user3",
+  "content": "I agree!"
+}
+
+
+# ==========================================
+# Like Posts
+# ==========================================
+
+### User2 Likes Post1 (SUCCESS)
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/like?userId=user2
+
+### User3 Likes Post1 (SUCCESS)
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/like?userId=user3
+
+### Verify Post1 likesCount is 2
+GET http://localhost:8080/api/posts/{{post1.response.body.id}}
+
+### User2 Likes Post1 Again (SHOULD FAIL: 409 Conflict - duplicate like)
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/like?userId=user2
+
+### Like Non-Existent Post (SHOULD FAIL: 404 Not Found)
+POST http://localhost:8080/api/posts/000000000000000000000000/like?userId=user2
+
+
+# ==========================================
+# Unlike Posts
+# ==========================================
+
+### User3 Unlikes Post1 (SUCCESS)
+DELETE http://localhost:8080/api/posts/{{post1.response.body.id}}/unlike?userId=user3
+
+### Verify Post1 likesCount is 1
+GET http://localhost:8080/api/posts/{{post1.response.body.id}}
+
+### User3 Unlikes Post1 Again (SHOULD FAIL: 404 Not Found - like doesn't exist)
+DELETE http://localhost:8080/api/posts/{{post1.response.body.id}}/unlike?userId=user3
+
+### Unlike Non-Existent Post (SHOULD FAIL: 404 Not Found)
+DELETE http://localhost:8080/api/posts/000000000000000000000000/unlike?userId=user3
+
+
+# ==========================================
+# Like Comments
+# ==========================================
+
+### User1 Likes Comment1 (SUCCESS)
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments/{{comment1.response.body.id}}/like?userId=user1
+
+### User3 Likes Comment1 (SUCCESS)
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments/{{comment1.response.body.id}}/like?userId=user3
+
+### Verify Comment1 likesCount is 2
+GET http://localhost:8080/api/posts/{{post1.response.body.id}}/comments
+
+### User1 Likes Comment1 Again (SHOULD FAIL: 409 Conflict - duplicate like)
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments/{{comment1.response.body.id}}/like?userId=user1
+
+### Like Non-Existent Comment (SHOULD FAIL: 404 Not Found)
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments/000000000000000000000000/like?userId=user1
+
+
+# ==========================================
+# Feed - Setup Follows
+# ==========================================
+# NOTE: Follow collection is managed by Member 1.
+# For testing, manually insert follows into MongoDB:
+#
+# db.follows.insertMany([
+#   { followerId: "user3", followingId: "user1" },
+#   { followerId: "user3", followingId: "user2" }
+# ])
+#
+# This makes user3 follow both user1 and user2.
+
+### Get Feed for User3 (Should show PUBLIC posts from user1 and user2)
+# Expected: post1 (PUBLIC, user1) and post3 (PUBLIC, user2)
+# NOT expected: post2 (PRIVATE, user1 — user3 is not the author)
+GET http://localhost:8080/api/users/user3/feed
+
+### Get Feed for User with No Follows (Should return empty array)
+GET http://localhost:8080/api/users/user_with_no_follows/feed
+
+### Get Feed for User1 (No follows inserted — should return empty array)
+GET http://localhost:8080/api/users/user1/feed
+
+
+# ==========================================
+# Cascade - Delete Post Removes Likes
+# ==========================================
+
+### Verify Post1 Still Has Likes and Comments
+GET http://localhost:8080/api/posts/{{post1.response.body.id}}
+###
+GET http://localhost:8080/api/posts/{{post1.response.body.id}}/comments
+
+### Delete Post1 (Should cascade delete comments and likes)
+DELETE http://localhost:8080/api/posts/{{post1.response.body.id}}
+
+### Verify Post1 is Gone (SHOULD FAIL: 404 Not Found)
+GET http://localhost:8080/api/posts/{{post1.response.body.id}}
+
+### Verify Comments are Gone (Should return empty array)
+GET http://localhost:8080/api/posts/{{post1.response.body.id}}/comments
+
+
+# ==========================================
+# Cleanup
+# ==========================================
+
+### Delete Post2
+DELETE http://localhost:8080/api/posts/{{post2.response.body.id}}
+
+### Delete Post3
+DELETE http://localhost:8080/api/posts/{{post3.response.body.id}}
+
+### Verify All Posts Deleted (Should return empty array)
+GET http://localhost:8080/api/posts
