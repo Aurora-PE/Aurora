@@ -48,4 +48,14 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("error", ex.getMessage()));
     }
+
+     @ExceptionHandler(DuplicateActionException.class)
+    public ResponseEntity<Map<String, String>>
+    handleDuplicateActionExceptions(
+        DuplicateActionException ex
+    ) {
+        return ResponseEntity
+            .status(HttpStatus.CONFLICT)
+            .body(Map.of("error", ex.getMessage()));
+    }
 }

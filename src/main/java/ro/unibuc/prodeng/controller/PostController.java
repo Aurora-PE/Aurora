@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,20 +30,21 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostResponse>> getAllPosts() {
+    public ResponseEntity<List<PostResponse>> getAllPosts(@RequestHeader("Authorization") String authHeader) {
         return ResponseEntity.ok(postService.getAllPosts());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getPost(
-        @PathVariable String id
+        @PathVariable String id, @RequestHeader("Authorization") String authHeader
     ) {
         return ResponseEntity.ok(postService.getPost(id));
     }
 
     @PostMapping
     public ResponseEntity<PostResponse> createPost(
-        @RequestBody CreatePostRequest request
+        @RequestBody CreatePostRequest request,
+         @RequestHeader("Authorization") String authHeader
     ) {
         PostResponse created = postService.createPost(request);
         return ResponseEntity
@@ -53,7 +55,8 @@ public class PostController {
     @PutMapping("/{id}")
     public ResponseEntity<PostResponse> updatePost(
         @PathVariable String id,
-        @RequestBody UpdatePostRequest request
+        @RequestBody UpdatePostRequest request,
+         @RequestHeader("Authorization") String authHeader
     ) {
         return ResponseEntity.ok(
             postService.updatePost(id, request)
@@ -62,7 +65,7 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(
-        @PathVariable String id
+        @PathVariable String id,  @RequestHeader("Authorization") String authHeader
     ) {
         postService.deletePost(id);
         return ResponseEntity.noContent().build();

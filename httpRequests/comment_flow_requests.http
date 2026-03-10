@@ -1,0 +1,229 @@
+# You can use this file to easily send requests to your API.
+# Prerequisite: humao.rest-client Vscode plugin
+# TIP: Run requests in order - later requests reference IDs from earlier responses
+# NOTE: A post must exist before creating comments. We create one first.
+
+# ==========================================
+# Setup - Create Users & Login
+# ==========================================
+
+### Create User1
+# @name createUser1
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "commentuser1",
+  "email": "commentuser1@example.com",
+  "password": "securepassword123",
+  "bio": "User 1",
+  "isPrivate": false
+}
+
+### Create User2
+# @name createUser2
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "commentuser2",
+  "email": "commentuser2@example.com",
+  "password": "securepassword456",
+  "bio": "User 2",
+  "isPrivate": false
+}
+
+### Create User3
+# @name createUser3
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "commentuser3",
+  "email": "commentuser3@example.com",
+  "password": "securepassword789",
+  "bio": "User 3",
+  "isPrivate": false
+}
+
+### Login User1
+# @name loginUser1
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "commentuser1@example.com",
+  "password": "securepassword123"
+}
+
+### Login User2
+# @name loginUser2
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "commentuser2@example.com",
+  "password": "securepassword456"
+}
+
+### Login User3
+# @name loginUser3
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "commentuser3@example.com",
+  "password": "securepassword789"
+}
+
+# ==========================================
+# Setup - Create a Post to Comment On
+# ==========================================
+
+### Create Post for Comments
+# @name createPost
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+{
+  "authorId": "{{createUser1.response.body.id}}",
+  "content": "Post that will receive comments",
+  "imageUrl": null,
+  "visibility": "PUBLIC"
+}
+
+
+# ==========================================
+# Create Comments
+# ==========================================
+
+### Create First Comment on Post
+# @name createComment1
+POST http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+Content-Type: application/json
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+{
+  "authorId": "{{createUser2.response.body.id}}",
+  "content": "Great post! Really enjoyed reading this."
+}
+
+### Create Second Comment on Post (Same author)
+# @name createComment2
+POST http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+Content-Type: application/json
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+{
+  "authorId": "{{createUser2.response.body.id}}",
+  "content": "Adding another thought here."
+}
+
+### Create Third Comment on Post (Different author)
+# @name createComment3
+POST http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+Content-Type: application/json
+Authorization: Bearer {{loginUser3.response.body.token}}
+
+{
+  "authorId": "{{createUser3.response.body.id}}",
+  "content": "I agree with user2!"
+}
+
+### Create Comment on Non-Existent Post (SHOULD FAIL: 404 Not Found)
+POST http://localhost:8080/api/posts/000000000000000000000000/comments
+Content-Type: application/json
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+{
+  "authorId": "{{createUser1.response.body.id}}",
+  "content": "This should fail"
+}
+
+
+# ==========================================
+# Read Comments
+# ==========================================
+
+### Get All Comments for Post (Should return 3 comments, newest first)
+GET http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Get Comments for Non-Existent Post (Should return empty array)
+GET http://localhost:8080/api/posts/000000000000000000000000/comments
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+
+# ==========================================
+# Delete Comments
+# ==========================================
+
+### Delete First Comment (SUCCESS: 204 No Content)
+DELETE http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments/{{createComment1.response.body.id}}
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Verify First Comment Was Deleted (Should return only 2 comments)
+GET http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Delete Non-Existent Comment (SHOULD FAIL: 404 Not Found)
+DELETE http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments/000000000000000000000000
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Delete Second Comment
+DELETE http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments/{{createComment2.response.body.id}}
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Delete Third Comment
+DELETE http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments/{{createComment3.response.body.id}}
+Authorization: Bearer {{loginUser3.response.body.token}}
+
+### Verify All Comments Deleted (Should return empty array)
+GET http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+
+# ==========================================
+# Cascade Delete - Post Deletes Its Comments
+# ==========================================
+
+### Create Fresh Comment for Cascade Test
+# @name cascadeComment
+POST http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+Content-Type: application/json
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+{
+  "authorId": "{{createUser2.response.body.id}}",
+  "content": "This comment will be cascade deleted with the post"
+}
+
+### Verify Comment Exists
+GET http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Delete the Post (Should also delete all its comments)
+DELETE http://localhost:8080/api/posts/{{createPost.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Verify Post is Gone (SHOULD FAIL: 404 Not Found)
+GET http://localhost:8080/api/posts/{{createPost.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+
+# ==========================================
+# Cleanup - Delete Users
+# ==========================================
+
+### Delete User1
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Delete User2
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Delete User3
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginUser3.response.body.token}}
