@@ -12,4 +12,5 @@ public interface ConversationRepository extends MongoRepository<ConversationEnti
     List<ConversationEntity> findByParticipant1IdOrParticipant2IdOrderByLastMessageAtDesc(String participant1Id,String participant2Id);
     Optional<ConversationEntity> findByParticipant1IdAndParticipant2Id(String participant1Id,String participant2Id);
     Optional<ConversationEntity> findByParticipant2IdAndParticipant1Id(String participant2Id,String participant1Id);
+    void deleteById(String Id);
 }

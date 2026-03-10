@@ -72,6 +72,86 @@ PATCH http://localhost:8080/api/notifications/{{user2Unread.response.body.$[0].i
 Authorization: Bearer {{loginUser2.response.body.token}}
 
 # ==========================================
+# Comment and like notifications
+# ==========================================
+
+### Create Post for Comments
+# @name createPost
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+{
+  "authorId": "{{createUser1.response.body.id}}",
+  "content": "Post that will receive comments",
+  "imageUrl": null,
+  "visibility": "PUBLIC"
+}
+
+### Create Comment on Post
+# @name createComment
+POST http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+Content-Type: application/json
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+{
+  "authorId": "{{createUser2.response.body.id}}",
+  "content": "Great post! Really enjoyed reading this."
+}
+
+### Check User1 notifications
+GET http://localhost:8080/api/notifications/all
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### User2 Likes Post
+POST http://localhost:8080/api/posts/{{createPost.response.body.id}}/like?userId={{createUser2.response.body.id}}
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Check User1 notifications
+GET http://localhost:8080/api/notifications/all
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### User1 Likes Comment1
+POST http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments/{{createComment.response.body.id}}/like?userId={{createUser1.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Check User2 notifications
+GET http://localhost:8080/api/notifications/all
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+# ==========================================
+# Message notifications
+# ==========================================
+
+### User1 sends first message to User2
+# @name sendMessage1
+POST http://localhost:8080/api/messages/{{createUser2.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
+Content-Type: application/json
+
+{
+  "content": "Hello Jane!"
+}
+
+### Check User2 notifications
+GET http://localhost:8080/api/notifications/all
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### User2 replies
+# @name sendMessage2
+POST http://localhost:8080/api/messages/{{createUser1.response.body.id}}
+Authorization: Bearer {{loginUser2.response.body.token}}
+Content-Type: application/json
+
+{
+  "content": "Hi John!"
+}
+
+### Check User1 notifications
+GET http://localhost:8080/api/notifications/all
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+# ==========================================
 # Group notifications
 # ==========================================
 
@@ -154,10 +234,10 @@ Authorization: Bearer {{loginUser2.response.body.token}}
 # Cleanup
 # ==========================================
 
-### Delete Second User (SUCCESS: Using /self and their own token)
+### Delete Second User
 DELETE http://localhost:8080/api/users/self
 Authorization: Bearer {{loginUser2.response.body.token}}
 
-### Delete First User (SUCCESS: Using /self and their own token)
+### Delete First User
 DELETE http://localhost:8080/api/users/self
 Authorization: Bearer {{loginUser1.response.body.token}}

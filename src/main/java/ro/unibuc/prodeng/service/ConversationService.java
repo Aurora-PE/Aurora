@@ -3,9 +3,12 @@ package ro.unibuc.prodeng.service;
 import org.springframework.stereotype.Service;
 import ro.unibuc.prodeng.model.ConversationEntity;
 import ro.unibuc.prodeng.repository.ConversationRepository;
+import ro.unibuc.prodeng.repository.UserRepository;
+import ro.unibuc.prodeng.repository.MessageRepository;
 import ro.unibuc.prodeng.response.ConversationResponse;
 import ro.unibuc.prodeng.exception.EntityNotFoundException;
 import ro.unibuc.prodeng.exception.UnauthorizedException;
+
 
 import java.util.List;
 
@@ -13,9 +16,13 @@ import java.util.List;
 public class ConversationService {
 
     private final ConversationRepository conversationRepository;
+    private final UserRepository userRepository;
+    private final MessageRepository messageRepository;
 
-    public ConversationService(ConversationRepository conversationRepository) {
+    public ConversationService(ConversationRepository conversationRepository, UserRepository userRepository, MessageRepository messageRepository) {
         this.conversationRepository = conversationRepository;
+        this.userRepository = userRepository;
+        this.messageRepository = messageRepository;
     }
 
     public List<ConversationResponse> getUserConversations(String userId) {
@@ -67,6 +74,24 @@ public class ConversationService {
         );
 
         conversationRepository.save(updatedConversation);
+    }
+
+    public void deleteConversation(String deletedUserId) {
+        List<ConversationEntity> conversations =
+                conversationRepository.findByParticipant1IdOrParticipant2IdOrderByLastMessageAtDesc(deletedUserId, deletedUserId);
+
+        for (ConversationEntity conversation : conversations) {
+
+            String otherUser =
+                    conversation.participant1Id().equals(deletedUserId)
+                            ? conversation.participant2Id()
+                            : conversation.participant1Id();
+
+            if (!userRepository.existsById(otherUser)) {
+                messageRepository.deleteByConversationId(conversation.id());
+                conversationRepository.deleteById(conversation.id());
+            }
+        }
     }
 
     private ConversationResponse toResponse(ConversationEntity conversation) {
