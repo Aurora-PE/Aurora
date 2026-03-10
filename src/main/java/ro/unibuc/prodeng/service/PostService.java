@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import ro.unibuc.prodeng.exception.EntityNotFoundException;
 import ro.unibuc.prodeng.model.PostEntity;
+import ro.unibuc.prodeng.repository.CommentRepository;
 import ro.unibuc.prodeng.repository.PostRepository;
 import ro.unibuc.prodeng.request.CreatePostRequest;
 import ro.unibuc.prodeng.request.UpdatePostRequest;
@@ -15,12 +16,15 @@ import ro.unibuc.prodeng.response.PostResponse;
 @Service
 public class PostService {
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
      public PostService(
-        PostRepository postRepository
+        PostRepository postRepository,
+        CommentRepository commentRepository
     ) {
         this.postRepository = postRepository;
-        }
+        this.commentRepository = commentRepository;    
+    }
     
     public PostResponse createPost(CreatePostRequest request) {
         PostEntity post = new PostEntity(
@@ -85,7 +89,7 @@ public class PostService {
                     "Post " + id
                 )
             );
-
+        commentRepository.deleteAllByPostId(id);
         postRepository.delete(post);
     }
 

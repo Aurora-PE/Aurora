@@ -1,0 +1,122 @@
+# You can use this file to easily send requests to your API.
+# Prerequisite: humao.rest-client Vscode plugin
+# TIP: Run requests in order - later requests reference IDs from earlier responses
+# NOTE: A post must exist before creating comments. We create one first.
+
+# ==========================================
+# Setup - Create a Post to Comment On
+# ==========================================
+
+### Create Post for Comments
+# @name createPost
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+  "authorId": "user1",
+  "content": "Post that will receive comments",
+  "imageUrl": null,
+  "visibility": "PUBLIC"
+}
+
+
+# ==========================================
+# Create Comments
+# ==========================================
+
+### Create First Comment on Post
+# @name createComment1
+POST http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+Content-Type: application/json
+
+{
+  "authorId": "user2",
+  "content": "Great post! Really enjoyed reading this."
+}
+
+### Create Second Comment on Post (Same author)
+# @name createComment2
+POST http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+Content-Type: application/json
+
+{
+  "authorId": "user2",
+  "content": "Adding another thought here."
+}
+
+### Create Third Comment on Post (Different author)
+# @name createComment3
+POST http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+Content-Type: application/json
+
+{
+  "authorId": "user3",
+  "content": "I agree with user2!"
+}
+
+### Create Comment on Non-Existent Post (SHOULD FAIL: 404 Not Found)
+POST http://localhost:8080/api/posts/000000000000000000000000/comments
+Content-Type: application/json
+
+{
+  "authorId": "user1",
+  "content": "This should fail"
+}
+
+
+# ==========================================
+# Read Comments
+# ==========================================
+
+### Get All Comments for Post (Should return 3 comments, newest first)
+GET http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+
+### Get Comments for Non-Existent Post (Should return empty array)
+GET http://localhost:8080/api/posts/000000000000000000000000/comments
+
+
+# ==========================================
+# Delete Comments
+# ==========================================
+
+### Delete First Comment (SUCCESS: 204 No Content)
+DELETE http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments/{{createComment1.response.body.id}}
+
+### Verify First Comment Was Deleted (Should return only 2 comments)
+GET http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+
+### Delete Non-Existent Comment (SHOULD FAIL: 404 Not Found)
+DELETE http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments/000000000000000000000000
+
+### Delete Second Comment
+DELETE http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments/{{createComment2.response.body.id}}
+
+### Delete Third Comment
+DELETE http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments/{{createComment3.response.body.id}}
+
+### Verify All Comments Deleted (Should return empty array)
+GET http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+
+
+# ==========================================
+# Cascade Delete - Post Deletes Its Comments
+# ==========================================
+
+### Create Fresh Comment for Cascade Test
+# @name cascadeComment
+POST http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+Content-Type: application/json
+
+{
+  "authorId": "user2",
+  "content": "This comment will be cascade deleted with the post"
+}
+
+### Verify Comment Exists
+GET http://localhost:8080/api/posts/{{createPost.response.body.id}}/comments
+
+### Delete the Post (Should also delete all its comments)
+DELETE http://localhost:8080/api/posts/{{createPost.response.body.id}}
+
+### Verify Post is Gone (SHOULD FAIL: 404 Not Found)
+GET http://localhost:8080/api/posts/{{createPost.response.body.id}}
