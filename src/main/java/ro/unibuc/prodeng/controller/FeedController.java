@@ -20,7 +20,7 @@ public class FeedController {
 
     @GetMapping
     public ResponseEntity<List<PostResponse>> getFeed(
-        @PathVariable String userId
+        @PathVariable String userId,  @RequestHeader("Authorization") String authHeader
     ) {
         return ResponseEntity.ok(feedService.getFeed(userId));
     }

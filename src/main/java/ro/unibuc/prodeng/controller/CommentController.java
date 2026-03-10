@@ -20,7 +20,7 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CommentResponse>> getComments(
+    public ResponseEntity<List<CommentResponse>> getComments( @RequestHeader("Authorization") String authHeader,
         @PathVariable String postId
     ) {
         return ResponseEntity.ok(
@@ -31,7 +31,7 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<CommentResponse> createComment(
         @PathVariable String postId,
-        @RequestBody CreateCommentRequest request
+        @RequestBody CreateCommentRequest request, @RequestHeader("Authorization") String authHeader
     ) {
         CommentResponse created =
             commentService.createComment(postId, request);
@@ -43,7 +43,8 @@ public class CommentController {
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
         @PathVariable String postId,
-        @PathVariable String commentId
+        @PathVariable String commentId,
+         @RequestHeader("Authorization") String authHeader
     ) {
         commentService.deleteComment(commentId);
         return ResponseEntity.noContent().build();

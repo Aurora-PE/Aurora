@@ -18,7 +18,8 @@ public class LikeController {
     @PostMapping("/posts/{postId}/like")
     public ResponseEntity<Void> likePost(
         @PathVariable String postId,
-        @RequestParam String userId
+        @RequestParam String userId,
+         @RequestHeader("Authorization") String authHeader
     ) {
         likeService.likePost(postId, userId);
         return ResponseEntity.ok().build();
@@ -27,7 +28,8 @@ public class LikeController {
     @DeleteMapping("/posts/{postId}/unlike")
     public ResponseEntity<Void> unlikePost(
         @PathVariable String postId,
-        @RequestParam String userId
+        @RequestParam String userId,
+         @RequestHeader("Authorization") String authHeader
     ) {
         likeService.unlikePost(postId, userId);
         return ResponseEntity.noContent().build();
@@ -37,7 +39,8 @@ public class LikeController {
     public ResponseEntity<Void> likeComment(
         @PathVariable String postId,
         @PathVariable String commentId,
-        @RequestParam String userId
+        @RequestParam String userId,
+         @RequestHeader("Authorization") String authHeader
     ) {
         likeService.likeComment(commentId, userId);
         return ResponseEntity.ok().build();

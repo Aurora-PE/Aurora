@@ -3,6 +3,56 @@
 # TIP: Run requests in order - later requests reference IDs from earlier responses
 
 # ==========================================
+# Setup - Create Users & Login
+# ==========================================
+
+### Create User1
+# @name createUser1
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "postuser1",
+  "email": "postuser1@example.com",
+  "password": "securepassword123",
+  "bio": "User 1",
+  "isPrivate": false
+}
+
+### Create User2
+# @name createUser2
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "postuser2",
+  "email": "postuser2@example.com",
+  "password": "securepassword456",
+  "bio": "User 2",
+  "isPrivate": false
+}
+
+### Login User1
+# @name loginUser1
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "postuser1@example.com",
+  "password": "securepassword123"
+}
+
+### Login User2
+# @name loginUser2
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "postuser2@example.com",
+  "password": "securepassword456"
+}
+
+# ==========================================
 # Create Posts
 # ==========================================
 
@@ -10,9 +60,10 @@
 # @name createPost1
 POST http://localhost:8080/api/posts
 Content-Type: application/json
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 {
-  "authorId": "user1",
+  "authorId": "{{createUser1.response.body.id}}",
   "content": "My first public post!",
   "imageUrl": "https://example.com/image1.png",
   "visibility": "PUBLIC"
@@ -22,9 +73,10 @@ Content-Type: application/json
 # @name createPost2
 POST http://localhost:8080/api/posts
 Content-Type: application/json
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 {
-  "authorId": "user1",
+  "authorId": "{{createUser1.response.body.id}}",
   "content": "This is a private thought",
   "imageUrl": null,
   "visibility": "PRIVATE"
@@ -34,9 +86,10 @@ Content-Type: application/json
 # @name createPost3
 POST http://localhost:8080/api/posts
 Content-Type: application/json
+Authorization: Bearer {{loginUser2.response.body.token}}
 
 {
-  "authorId": "user2",
+  "authorId": "{{createUser2.response.body.id}}",
   "content": "Hello from user2!",
   "imageUrl": "https://example.com/image2.png",
   "visibility": "PUBLIC"
@@ -49,12 +102,15 @@ Content-Type: application/json
 
 ### Get All Posts (Should return 3 posts)
 GET http://localhost:8080/api/posts
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 ### Get First Post by ID (Should return post details)
 GET http://localhost:8080/api/posts/{{createPost1.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 ### Get Non-Existent Post (SHOULD FAIL: 404 Not Found)
 GET http://localhost:8080/api/posts/000000000000000000000000
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 
 # ==========================================
@@ -64,6 +120,7 @@ GET http://localhost:8080/api/posts/000000000000000000000000
 ### Update First Post Content and Visibility
 PUT http://localhost:8080/api/posts/{{createPost1.response.body.id}}
 Content-Type: application/json
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 {
   "content": "Updated: My first post has been edited!",
@@ -74,6 +131,7 @@ Content-Type: application/json
 ### Update Second Post (Make it PUBLIC)
 PUT http://localhost:8080/api/posts/{{createPost2.response.body.id}}
 Content-Type: application/json
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 {
   "content": "No longer private!",
@@ -84,6 +142,7 @@ Content-Type: application/json
 ### Update Non-Existent Post (SHOULD FAIL: 404 Not Found)
 PUT http://localhost:8080/api/posts/000000000000000000000000
 Content-Type: application/json
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 {
   "content": "This should fail",
@@ -93,6 +152,7 @@ Content-Type: application/json
 
 ### Verify First Post Was Updated (Content should be changed)
 GET http://localhost:8080/api/posts/{{createPost1.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 
 # ==========================================
@@ -101,15 +161,19 @@ GET http://localhost:8080/api/posts/{{createPost1.response.body.id}}
 
 ### Delete Third Post (SUCCESS: 204 No Content)
 DELETE http://localhost:8080/api/posts/{{createPost3.response.body.id}}
+Authorization: Bearer {{loginUser2.response.body.token}}
 
 ### Verify Third Post Was Deleted (SHOULD FAIL: 404 Not Found)
 GET http://localhost:8080/api/posts/{{createPost3.response.body.id}}
+Authorization: Bearer {{loginUser2.response.body.token}}
 
 ### Delete Non-Existent Post (SHOULD FAIL: 404 Not Found)
 DELETE http://localhost:8080/api/posts/000000000000000000000000
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 ### Get All Posts (Should return only 2 posts now)
 GET http://localhost:8080/api/posts
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 
 # ==========================================
@@ -118,9 +182,19 @@ GET http://localhost:8080/api/posts
 
 ### Delete First Post
 DELETE http://localhost:8080/api/posts/{{createPost1.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 ### Delete Second Post
 DELETE http://localhost:8080/api/posts/{{createPost2.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 ### Verify All Deleted (Should return empty array)
 GET http://localhost:8080/api/posts
+
+### Delete User1
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Delete User2
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginUser2.response.body.token}}

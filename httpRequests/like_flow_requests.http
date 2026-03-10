@@ -4,6 +4,79 @@
 # NOTE: Posts, comments, and follows must exist before testing likes and feed.
 
 # ==========================================
+# Setup - Create Users & Login
+# ==========================================
+
+### Create User1
+# @name createUser1
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "likeuser1",
+  "email": "likeuser1@example.com",
+  "password": "securepassword123",
+  "bio": "User 1",
+  "isPrivate": false
+}
+
+### Create User2
+# @name createUser2
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "likeuser2",
+  "email": "likeuser2@example.com",
+  "password": "securepassword456",
+  "bio": "User 2",
+  "isPrivate": false
+}
+
+### Create User3
+# @name createUser3
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "likeuser3",
+  "email": "likeuser3@example.com",
+  "password": "securepassword789",
+  "bio": "User 3",
+  "isPrivate": false
+}
+
+### Login User1
+# @name loginUser1
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "likeuser1@example.com",
+  "password": "securepassword123"
+}
+
+### Login User2
+# @name loginUser2
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "likeuser2@example.com",
+  "password": "securepassword456"
+}
+
+### Login User3
+# @name loginUser3
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "likeuser3@example.com",
+  "password": "securepassword789"
+}
+
+# ==========================================
 # Setup - Create Posts and Comments
 # ==========================================
 
@@ -11,9 +84,10 @@
 # @name post1
 POST http://localhost:8080/api/posts
 Content-Type: application/json
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 {
-  "authorId": "user1",
+  "authorId": "{{createUser1.response.body.id}}",
   "content": "User1's public post",
   "imageUrl": "https://example.com/img1.png",
   "visibility": "PUBLIC"
@@ -23,9 +97,10 @@ Content-Type: application/json
 # @name post2
 POST http://localhost:8080/api/posts
 Content-Type: application/json
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 {
-  "authorId": "user1",
+  "authorId": "{{createUser1.response.body.id}}",
   "content": "User1's private post",
   "imageUrl": null,
   "visibility": "PRIVATE"
@@ -35,9 +110,10 @@ Content-Type: application/json
 # @name post3
 POST http://localhost:8080/api/posts
 Content-Type: application/json
+Authorization: Bearer {{loginUser2.response.body.token}}
 
 {
-  "authorId": "user2",
+  "authorId": "{{createUser2.response.body.id}}",
   "content": "User2's public post",
   "imageUrl": null,
   "visibility": "PUBLIC"
@@ -47,9 +123,10 @@ Content-Type: application/json
 # @name comment1
 POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments
 Content-Type: application/json
+Authorization: Bearer {{loginUser2.response.body.token}}
 
 {
-  "authorId": "user2",
+  "authorId": "{{createUser2.response.body.id}}",
   "content": "Nice post user1!"
 }
 
@@ -57,9 +134,10 @@ Content-Type: application/json
 # @name comment2
 POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments
 Content-Type: application/json
+Authorization: Bearer {{loginUser3.response.body.token}}
 
 {
-  "authorId": "user3",
+  "authorId": "{{createUser3.response.body.id}}",
   "content": "I agree!"
 }
 
@@ -69,19 +147,24 @@ Content-Type: application/json
 # ==========================================
 
 ### User2 Likes Post1 (SUCCESS)
-POST http://localhost:8080/api/posts/{{post1.response.body.id}}/like?userId=user2
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/like?userId={{createUser2.response.body.id}}
+Authorization: Bearer {{loginUser2.response.body.token}}
 
 ### User3 Likes Post1 (SUCCESS)
-POST http://localhost:8080/api/posts/{{post1.response.body.id}}/like?userId=user3
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/like?userId={{createUser3.response.body.id}}
+Authorization: Bearer {{loginUser3.response.body.token}}
 
 ### Verify Post1 likesCount is 2
 GET http://localhost:8080/api/posts/{{post1.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 ### User2 Likes Post1 Again (SHOULD FAIL: 409 Conflict - duplicate like)
-POST http://localhost:8080/api/posts/{{post1.response.body.id}}/like?userId=user2
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/like?userId={{createUser2.response.body.id}}
+Authorization: Bearer {{loginUser2.response.body.token}}
 
 ### Like Non-Existent Post (SHOULD FAIL: 404 Not Found)
-POST http://localhost:8080/api/posts/000000000000000000000000/like?userId=user2
+POST http://localhost:8080/api/posts/000000000000000000000000/like?userId={{createUser2.response.body.id}}
+Authorization: Bearer {{loginUser2.response.body.token}}
 
 
 # ==========================================
@@ -89,16 +172,20 @@ POST http://localhost:8080/api/posts/000000000000000000000000/like?userId=user2
 # ==========================================
 
 ### User3 Unlikes Post1 (SUCCESS)
-DELETE http://localhost:8080/api/posts/{{post1.response.body.id}}/unlike?userId=user3
+DELETE http://localhost:8080/api/posts/{{post1.response.body.id}}/unlike?userId={{createUser3.response.body.id}}
+Authorization: Bearer {{loginUser3.response.body.token}}
 
 ### Verify Post1 likesCount is 1
 GET http://localhost:8080/api/posts/{{post1.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 ### User3 Unlikes Post1 Again (SHOULD FAIL: 404 Not Found - like doesn't exist)
-DELETE http://localhost:8080/api/posts/{{post1.response.body.id}}/unlike?userId=user3
+DELETE http://localhost:8080/api/posts/{{post1.response.body.id}}/unlike?userId={{createUser3.response.body.id}}
+Authorization: Bearer {{loginUser3.response.body.token}}
 
 ### Unlike Non-Existent Post (SHOULD FAIL: 404 Not Found)
-DELETE http://localhost:8080/api/posts/000000000000000000000000/unlike?userId=user3
+DELETE http://localhost:8080/api/posts/000000000000000000000000/unlike?userId={{createUser3.response.body.id}}
+Authorization: Bearer {{loginUser3.response.body.token}}
 
 
 # ==========================================
@@ -106,44 +193,47 @@ DELETE http://localhost:8080/api/posts/000000000000000000000000/unlike?userId=us
 # ==========================================
 
 ### User1 Likes Comment1 (SUCCESS)
-POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments/{{comment1.response.body.id}}/like?userId=user1
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments/{{comment1.response.body.id}}/like?userId={{createUser1.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 ### User3 Likes Comment1 (SUCCESS)
-POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments/{{comment1.response.body.id}}/like?userId=user3
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments/{{comment1.response.body.id}}/like?userId={{createUser3.response.body.id}}
+Authorization: Bearer {{loginUser3.response.body.token}}
 
 ### Verify Comment1 likesCount is 2
 GET http://localhost:8080/api/posts/{{post1.response.body.id}}/comments
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 ### User1 Likes Comment1 Again (SHOULD FAIL: 409 Conflict - duplicate like)
-POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments/{{comment1.response.body.id}}/like?userId=user1
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments/{{comment1.response.body.id}}/like?userId={{createUser1.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 ### Like Non-Existent Comment (SHOULD FAIL: 404 Not Found)
-POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments/000000000000000000000000/like?userId=user1
+POST http://localhost:8080/api/posts/{{post1.response.body.id}}/comments/000000000000000000000000/like?userId={{createUser1.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 
 # ==========================================
 # Feed - Setup Follows
 # ==========================================
-# NOTE: Follow collection is managed by Member 1.
-# For testing, manually insert follows into MongoDB:
-#
-# db.follows.insertMany([
-#   { followerId: "user3", followingId: "user1" },
-#   { followerId: "user3", followingId: "user2" }
-# ])
-#
-# This makes user3 follow both user1 and user2.
+
+### User3 Follows User1
+POST http://localhost:8080/api/users/{{createUser1.response.body.id}}/follow
+Authorization: Bearer {{loginUser3.response.body.token}}
+
+### User3 Follows User2
+POST http://localhost:8080/api/users/{{createUser2.response.body.id}}/follow
+Authorization: Bearer {{loginUser3.response.body.token}}
 
 ### Get Feed for User3 (Should show PUBLIC posts from user1 and user2)
 # Expected: post1 (PUBLIC, user1) and post3 (PUBLIC, user2)
 # NOT expected: post2 (PRIVATE, user1 — user3 is not the author)
-GET http://localhost:8080/api/users/user3/feed
+GET http://localhost:8080/api/users/{{createUser3.response.body.id}}/feed
+Authorization: Bearer {{loginUser3.response.body.token}}
 
-### Get Feed for User with No Follows (Should return empty array)
-GET http://localhost:8080/api/users/user_with_no_follows/feed
-
-### Get Feed for User1 (No follows inserted — should return empty array)
-GET http://localhost:8080/api/users/user1/feed
+### Get Feed for User1 (No follows — should return empty array)
+GET http://localhost:8080/api/users/{{createUser1.response.body.id}}/feed
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 
 # ==========================================
@@ -152,17 +242,23 @@ GET http://localhost:8080/api/users/user1/feed
 
 ### Verify Post1 Still Has Likes and Comments
 GET http://localhost:8080/api/posts/{{post1.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
+
 ###
 GET http://localhost:8080/api/posts/{{post1.response.body.id}}/comments
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 ### Delete Post1 (Should cascade delete comments and likes)
 DELETE http://localhost:8080/api/posts/{{post1.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 ### Verify Post1 is Gone (SHOULD FAIL: 404 Not Found)
 GET http://localhost:8080/api/posts/{{post1.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 ### Verify Comments are Gone (Should return empty array)
 GET http://localhost:8080/api/posts/{{post1.response.body.id}}/comments
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 
 # ==========================================
@@ -171,9 +267,23 @@ GET http://localhost:8080/api/posts/{{post1.response.body.id}}/comments
 
 ### Delete Post2
 DELETE http://localhost:8080/api/posts/{{post2.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
 
 ### Delete Post3
 DELETE http://localhost:8080/api/posts/{{post3.response.body.id}}
+Authorization: Bearer {{loginUser2.response.body.token}}
 
 ### Verify All Posts Deleted (Should return empty array)
 GET http://localhost:8080/api/posts
+
+### Delete User1
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### Delete User2
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Delete User3
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginUser3.response.body.token}}
