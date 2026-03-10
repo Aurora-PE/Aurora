@@ -9,6 +9,7 @@ import ro.unibuc.prodeng.exception.UnauthorizedException;
 import ro.unibuc.prodeng.model.GroupEntity;
 import ro.unibuc.prodeng.model.GroupMemberEntity;
 import ro.unibuc.prodeng.model.UserEntity;
+import ro.unibuc.prodeng.repository.ConversationRepository;
 import ro.unibuc.prodeng.repository.FollowRepository;
 import ro.unibuc.prodeng.repository.GroupInvitationRepository;
 import ro.unibuc.prodeng.repository.GroupMemberRepository;
@@ -30,13 +31,14 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-   private final UserRepository userRepository;
+    private final UserRepository userRepository;
     private final FollowRepository followRepository;
     private final GroupRepository groupRepository;
     private final GroupMemberRepository groupMemberRepository;
     private final GroupInvitationRepository groupInvitationRepository;
     private final NotificationRepository notificationRepository;
     private final PostRepository postRepository;
+    private final ConversationService conversationService;
 
     public UserService(UserRepository userRepository, 
                        FollowRepository followRepository,
@@ -44,7 +46,8 @@ public class UserService {
                        GroupMemberRepository groupMemberRepository,
                        GroupInvitationRepository groupInvitationRepository,
                        NotificationRepository notificationRepository,
-                    PostRepository postRepository) {
+                       PostRepository postRepository,
+                       ConversationService conversationService) {
         this.userRepository = userRepository;
         this.followRepository = followRepository;
         this.groupRepository = groupRepository;
@@ -52,6 +55,7 @@ public class UserService {
         this.groupInvitationRepository = groupInvitationRepository;
         this.notificationRepository = notificationRepository;
         this.postRepository = postRepository;
+        this.conversationService = conversationService;
     }
 
     public UserResponse getUserById(String requesterId, String targetId) {
@@ -124,6 +128,8 @@ public class UserService {
         groupMemberRepository.deleteByUserId(requesterId);
 
         notificationRepository.deleteByUserId(requesterId);
+
+        conversationService.deleteConversation(requesterId);
 
         postRepository.deleteByAuthorId(requesterId);
 

@@ -1,0 +1,129 @@
+# ==========================================
+# Messaging Flow
+# ==========================================
+
+### Create First User
+# @name createUser1
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "johndoe",
+  "email": "john@example.com",
+  "password": "securepassword123",
+  "bio": "Software Engineer",
+  "avatarUrl": "https://example.com/avatar1.jpg",
+  "isPrivate": false
+}
+
+### Create Second User
+# @name createUser2
+POST http://localhost:8080/api/users
+Content-Type: application/json
+
+{
+  "username": "janedoe",
+  "email": "jane@example.com",
+  "password": "securepassword456",
+  "bio": "Graphic Designer",
+  "isPrivate": true
+}
+
+### Login First User
+# @name loginUser1
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "securepassword123"
+}
+
+### Login Second User
+# @name loginUser2
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "jane@example.com",
+  "password": "securepassword456"
+}
+
+### User1 sends first message to User2 (creates conversation automatically)
+# @name sendMessage1
+POST http://localhost:8080/api/messages/{{createUser2.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
+Content-Type: application/json
+
+{
+  "content": "Hello Jane!"
+}
+
+### User2 replies
+# @name sendMessage2
+POST http://localhost:8080/api/messages/{{createUser1.response.body.id}}
+Authorization: Bearer {{loginUser2.response.body.token}}
+Content-Type: application/json
+
+{
+  "content": "Hi John!"
+}
+
+### User1 sends another message
+POST http://localhost:8080/api/messages/{{createUser2.response.body.id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
+Content-Type: application/json
+
+{
+  "content": "How are you?"
+}
+
+# ==========================================
+# Conversations
+# ==========================================
+
+### User1 retrieves all conversations
+# @name user1Conversations
+GET http://localhost:8080/api/conversations
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### User2 retrieves all conversations
+GET http://localhost:8080/api/conversations
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+# ==========================================
+# Messages in Conversation
+# ==========================================
+
+### User1 retrieves messages from the conversation
+# @name conversationMessages
+GET http://localhost:8080/api/messages/conversation/{{user1Conversations.response.body.$[0].id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+### User2 retrieves messages from the conversation
+GET http://localhost:8080/api/messages/conversation/{{user1Conversations.response.body.$[0].id}}
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+# ==========================================
+# Read Receipts
+# ==========================================
+
+### User2 marks first message as read
+PATCH http://localhost:8080/api/messages/{{conversationMessages.response.body.$[0].id}}/read
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Verify messages again
+GET http://localhost:8080/api/messages/conversation/{{user1Conversations.response.body.$[0].id}}
+Authorization: Bearer {{loginUser1.response.body.token}}
+
+# ==========================================
+# Cleanup
+# ==========================================
+
+### Delete Second User 
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginUser2.response.body.token}}
+
+### Delete First User 
+DELETE http://localhost:8080/api/users/self
+Authorization: Bearer {{loginUser1.response.body.token}}

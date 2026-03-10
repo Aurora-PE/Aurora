@@ -6,9 +6,12 @@ import org.springframework.stereotype.Service;
 import ro.unibuc.prodeng.exception.EntityNotFoundException;
 import ro.unibuc.prodeng.model.CommentEntity;
 import ro.unibuc.prodeng.model.LikeTargetTypeEnum;
+import ro.unibuc.prodeng.model.PostEntity;
+import ro.unibuc.prodeng.model.UserEntity;
 import ro.unibuc.prodeng.repository.CommentRepository;
 import ro.unibuc.prodeng.repository.LikeRepository;
 import ro.unibuc.prodeng.repository.PostRepository;
+import ro.unibuc.prodeng.repository.UserRepository;
 import ro.unibuc.prodeng.request.CreateCommentRequest;
 import ro.unibuc.prodeng.response.CommentResponse;
 import java.time.LocalDateTime;
@@ -20,15 +23,21 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
     private final LikeRepository likeRepository;
+    private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     public CommentService(
         CommentRepository commentRepository,
         PostRepository postRepository,
-        LikeRepository likeRepository
+        LikeRepository likeRepository,
+        UserRepository userRepository,
+        NotificationService notificationService
     ) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
         this.likeRepository = likeRepository;
+        this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
     public CommentResponse createComment(
@@ -51,6 +60,13 @@ public class CommentService {
         );
 
         CommentEntity saved = commentRepository.save(comment);
+
+        UserEntity user = userRepository.findById(request.authorId()).get();
+
+        PostEntity post = postRepository.findById(postId).get();
+
+        notificationService.createNotification(post.authorId(), "User " + user.username() + " has commented on your post!", request.authorId());
+
         return toResponse(saved);
     }
 

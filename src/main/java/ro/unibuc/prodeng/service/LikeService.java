@@ -9,6 +9,8 @@ import ro.unibuc.prodeng.model.*;
 import ro.unibuc.prodeng.repository.CommentRepository;
 import ro.unibuc.prodeng.repository.LikeRepository;
 import ro.unibuc.prodeng.repository.PostRepository;
+import ro.unibuc.prodeng.repository.UserRepository;
+
 import java.time.LocalDateTime;
 
 @Service
@@ -17,15 +19,21 @@ public class LikeService {
     private final LikeRepository likeRepository;
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     public LikeService(
         LikeRepository likeRepository,
         PostRepository postRepository,
-        CommentRepository commentRepository
+        CommentRepository commentRepository,
+        UserRepository userRepository,
+        NotificationService notificationService
     ) {
         this.likeRepository = likeRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
+        this.userRepository = userRepository;
+        this.notificationService = notificationService;
     }
 
     public void likePost(String postId, String userId) {
@@ -57,6 +65,10 @@ public class LikeService {
             post.likesCount() + 1, post.localDateTime()
         );
         postRepository.save(updated);
+
+        UserEntity user = userRepository.findById(userId).get();
+
+        notificationService.createNotification(post.authorId(), "User " + user.username() + " has liked your post!", userId);
     }
 
     public void unlikePost(String postId, String userId) {
@@ -117,5 +129,9 @@ public class LikeService {
             comment.likesCount() + 1, comment.createdAt()
         );
         commentRepository.save(updated);
+
+        UserEntity user = userRepository.findById(userId).get();
+
+        notificationService.createNotification(comment.authorId(), "User " + user.username() + " has liked your comment!", userId);
     }
 }
