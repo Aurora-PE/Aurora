@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import ro.unibuc.prodeng.exception.EntityNotFoundException;
+import ro.unibuc.prodeng.model.CommentEntity;
 import ro.unibuc.prodeng.model.LikeTargetTypeEnum;
 import ro.unibuc.prodeng.model.PostEntity;
 import ro.unibuc.prodeng.repository.CommentRepository;
@@ -20,15 +21,18 @@ public class PostService {
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
     private final LikeRepository likeRepository;
+    private final CommentService commentService;
 
      public PostService(
         PostRepository postRepository,
         CommentRepository commentRepository,
-        LikeRepository likeRepository
+        LikeRepository likeRepository,
+        CommentService commentService
     ) {
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
-        this.likeRepository = likeRepository;    
+        this.likeRepository = likeRepository;
+        this.commentService = commentService;    
     }
     
     public PostResponse createPost(CreatePostRequest request) {
@@ -98,7 +102,13 @@ public class PostService {
             id, LikeTargetTypeEnum.POST
         );
 
-        commentRepository.deleteAllByPostId(id);
+        //commentRepository.deleteAllByPostId(id);
+        List<CommentEntity> allCommentsForPost = commentRepository.findByPostIdOrderByCreatedAtDesc(id);
+        for( CommentEntity comment: allCommentsForPost)
+        {
+            commentService.deleteComment(comment.id());
+        }
+
         postRepository.delete(post);
     }
 

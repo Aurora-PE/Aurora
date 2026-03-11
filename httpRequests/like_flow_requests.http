@@ -275,6 +275,8 @@ Authorization: Bearer {{loginUser2.response.body.token}}
 
 ### Verify All Posts Deleted (Should return empty array)
 GET http://localhost:8080/api/posts
+Authorization: Bearer {{loginUser1.response.body.token}}
+
 
 ### Delete User1
 DELETE http://localhost:8080/api/users/self

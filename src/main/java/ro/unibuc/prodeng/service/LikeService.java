@@ -4,9 +4,10 @@ package ro.unibuc.prodeng.service;
 import org.springframework.stereotype.Service;
 import ro.unibuc.prodeng.exception.DuplicateActionException;
 import ro.unibuc.prodeng.exception.EntityNotFoundException;
-
+import ro.unibuc.prodeng.exception.UnauthorizedException;
 import ro.unibuc.prodeng.model.*;
 import ro.unibuc.prodeng.repository.CommentRepository;
+import ro.unibuc.prodeng.repository.FollowRepository;
 import ro.unibuc.prodeng.repository.LikeRepository;
 import ro.unibuc.prodeng.repository.PostRepository;
 import ro.unibuc.prodeng.repository.UserRepository;
@@ -21,19 +22,22 @@ public class LikeService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final FollowRepository followRepository;
 
     public LikeService(
         LikeRepository likeRepository,
         PostRepository postRepository,
         CommentRepository commentRepository,
         UserRepository userRepository,
-        NotificationService notificationService
+        NotificationService notificationService,
+        FollowRepository followRepository
     ) {
         this.likeRepository = likeRepository;
         this.postRepository = postRepository;
         this.commentRepository = commentRepository;
         this.userRepository = userRepository;
         this.notificationService = notificationService;
+        this.followRepository = followRepository;
     }
 
     public void likePost(String postId, String userId) {
@@ -44,6 +48,16 @@ public class LikeService {
                 )
             );
 
+        if (post.visibility() == VisibilityEnum.PRIVATE
+        && !post.authorId().equals(userId)
+        && !followRepository.existsByFollowerIdAndFollowingId(
+            userId, post.authorId()
+        )) {
+        throw new UnauthorizedException(
+            "Cannot like a private post without following the author"
+        );
+    }
+
         if (likeRepository
             .findByUserIdAndTargetIdAndTargetType(
                 userId, postId, LikeTargetTypeEnum.POST
@@ -53,7 +67,7 @@ public class LikeService {
             );
         }
 
-        Like like = new Like(
+        LikeEntity like = new LikeEntity(
             null, userId, postId,
             LikeTargetTypeEnum.POST, LocalDateTime.now()
         );
@@ -79,7 +93,7 @@ public class LikeService {
                 )
             );
 
-        Like like = likeRepository
+        LikeEntity like = likeRepository
             .findByUserIdAndTargetIdAndTargetType(
                 userId, postId, LikeTargetTypeEnum.POST
             )
@@ -117,7 +131,7 @@ public class LikeService {
             );
         }
 
-        Like like = new Like(
+        LikeEntity like = new LikeEntity(
             null, userId, commentId,
             LikeTargetTypeEnum.COMMENT, LocalDateTime.now()
         );

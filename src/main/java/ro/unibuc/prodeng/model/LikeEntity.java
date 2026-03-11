@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "likes")
-public record Like(
+public record LikeEntity(
     @Id String id,
     String userId,
     String targetId,

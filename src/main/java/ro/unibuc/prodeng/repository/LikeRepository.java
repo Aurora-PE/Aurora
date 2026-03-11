@@ -4,13 +4,14 @@ import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import ro.unibuc.prodeng.model.Like;
+
+import ro.unibuc.prodeng.model.LikeEntity;
 import ro.unibuc.prodeng.model.LikeTargetTypeEnum;
 
 public interface LikeRepository
-    extends MongoRepository<Like, String> {
+    extends MongoRepository<LikeEntity, String> {
 
-    Optional<Like> findByUserIdAndTargetIdAndTargetType(
+    Optional<LikeEntity> findByUserIdAndTargetIdAndTargetType(
         String userId, String targetId, LikeTargetTypeEnum targetType
     );
 
