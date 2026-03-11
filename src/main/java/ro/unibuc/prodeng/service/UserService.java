@@ -8,6 +8,7 @@ import ro.unibuc.prodeng.exception.EntityNotFoundException;
 import ro.unibuc.prodeng.exception.UnauthorizedException;
 import ro.unibuc.prodeng.model.GroupEntity;
 import ro.unibuc.prodeng.model.GroupMemberEntity;
+import ro.unibuc.prodeng.model.PostEntity;
 import ro.unibuc.prodeng.model.UserEntity;
 import ro.unibuc.prodeng.repository.ConversationRepository;
 import ro.unibuc.prodeng.repository.FollowRepository;
@@ -39,6 +40,7 @@ public class UserService {
     private final NotificationRepository notificationRepository;
     private final PostRepository postRepository;
     private final ConversationService conversationService;
+    private final PostService postService;
 
     public UserService(UserRepository userRepository, 
                        FollowRepository followRepository,
@@ -47,7 +49,8 @@ public class UserService {
                        GroupInvitationRepository groupInvitationRepository,
                        NotificationRepository notificationRepository,
                        PostRepository postRepository,
-                       ConversationService conversationService) {
+                       ConversationService conversationService,
+                    PostService postService) {
         this.userRepository = userRepository;
         this.followRepository = followRepository;
         this.groupRepository = groupRepository;
@@ -56,6 +59,7 @@ public class UserService {
         this.notificationRepository = notificationRepository;
         this.postRepository = postRepository;
         this.conversationService = conversationService;
+        this.postService = postService;
     }
 
     public UserResponse getUserById(String requesterId, String targetId) {
@@ -131,7 +135,12 @@ public class UserService {
 
         conversationService.deleteConversation(requesterId);
 
-        postRepository.deleteByAuthorId(requesterId);
+        //postRepository.deleteByAuthorId(requesterId);
+        List<PostEntity> allPostsByUser = postRepository.findByAuthorIdOrderByLocalDateTimeDesc(requesterId);
+        for( PostEntity post: allPostsByUser)
+        {
+            postService.deletePost(post.id());
+        }
 
         userRepository.deleteById(requesterId);
     }
