@@ -77,4 +77,12 @@ class FollowControllerTest {
                 .header("Authorization", "Bearer token"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void testFollowUser_missingAuthHeader_returnsBadRequest() throws Exception {
+        mockMvc.perform(post("/api/users/2/follow"))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(followService);
+    }
 }

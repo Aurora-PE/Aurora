@@ -92,4 +92,17 @@ class GroupControllerTest {
         
         verify(groupService).deleteGroup("1", "g1");
     }
+
+    @Test
+    void testCreateGroup_invalidRequest_returnsBadRequest() throws Exception {
+        CreateGroupRequest invalidRequest = new CreateGroupRequest("", "Desc");
+
+        mockMvc.perform(post("/api/groups")
+                .header("Authorization", "Bearer token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(groupService);
+    }
 }

@@ -78,4 +78,17 @@ class GroupMemberControllerTest {
 
         verify(groupMemberService).changeMemberRole("1", "g1", "2", "ADMIN");
     }
+
+    @Test
+    void testChangeMemberRole_invalidRequest_returnsBadRequest() throws Exception {
+        UpdateRoleRequest invalidRequest = new UpdateRoleRequest("");
+
+        mockMvc.perform(patch("/api/groups/g1/members/2/role")
+                .header("Authorization", "Bearer token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(groupMemberService);
+    }
 }

@@ -94,4 +94,17 @@ class GroupInvitationControllerTest {
 
         verify(groupInviteService).declineInvitation("1", "inv1");
     }
+
+    @Test
+    void testCreateInvitation_missingInviteeId_returnsBadRequest() throws Exception {
+        CreateInviteRequest invalidRequest = new CreateInviteRequest("");
+
+        mockMvc.perform(post("/api/groups/g1/invitations")
+                .header("Authorization", "Bearer token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(groupInviteService);
+    }
 }

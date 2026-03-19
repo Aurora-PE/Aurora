@@ -124,4 +124,28 @@ class UserControllerTest {
         
         verify(userService).deleteUser("1");
     }
+
+    @Test
+    void testCreateUser_invalidRequest_returnsBadRequest() throws Exception {
+        CreateUserRequest invalidRequest = new CreateUserRequest("", "not-an-email", "", "bio", "url", false);
+
+        mockMvc.perform(post("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(userService);
+    }
+
+    @Test
+    void testLogin_missingCredentials_returnsBadRequest() throws Exception {
+        LoginRequest invalidRequest = new LoginRequest("", "");
+
+        mockMvc.perform(post("/api/users/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalidRequest)))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(userService);
+    }
 }
