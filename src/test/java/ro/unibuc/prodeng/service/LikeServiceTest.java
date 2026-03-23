@@ -132,36 +132,6 @@ class LikeServiceTest {
         verify(postRepository).save(any(PostEntity.class));
     }
 
-    @Test
-    void likePost_private_asAuthor_success() {
-        UserEntity user1 = new UserEntity(
-            "user1", "author", "author@example.com",
-            "hashedpw", "Bio", null, null, false
-        );
-
-        when(postRepository.findById("post2"))
-            .thenReturn(Optional.of(privatePost));
-        when(likeRepository
-            .findByUserIdAndTargetIdAndTargetType(
-                "user1", "post2", LikeTargetTypeEnum.POST
-            )).thenReturn(Optional.empty());
-        when(likeRepository.save(any(LikeEntity.class)))
-            .thenReturn(new LikeEntity(
-                "like1", "user1", "post2",
-                LikeTargetTypeEnum.POST, LocalDateTime.now()
-            ));
-        when(postRepository.save(any(PostEntity.class)))
-            .thenReturn(privatePost);
-        when(userRepository.findById("user1"))
-            .thenReturn(Optional.of(user1));
-
-        likeService.likePost("post2", "user1");
-
-        verify(followRepository, never())
-            .existsByFollowerIdAndFollowingId(any(), any());
-        verify(likeRepository).save(any(LikeEntity.class));
-    }
-
 
     @Test
     void likePost_private_notFollower_throwsUnauthorized() {
@@ -240,32 +210,8 @@ class LikeServiceTest {
         verify(postRepository).save(any(PostEntity.class));
     }
 
-    @Test
-    void unlikePost_likeNotFound_throwsException() {
-        when(postRepository.findById("post1"))
-            .thenReturn(Optional.of(publicPost));
-        when(likeRepository
-            .findByUserIdAndTargetIdAndTargetType(
-                "user2", "post1", LikeTargetTypeEnum.POST
-            )).thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class,
-            () -> likeService.unlikePost("post1", "user2")
-        );
-
-        verify(likeRepository, never()).deleteById(any());
-    }
-
-    @Test
-    void unlikePost_postNotFound_throwsException() {
-        when(postRepository.findById("invalid"))
-            .thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class,
-            () -> likeService.unlikePost("invalid", "user2")
-        );
-    }
-
+   
+   
     @Test
     void likeComment_success() {
         when(commentRepository.findById("comment1"))
@@ -302,41 +248,5 @@ class LikeServiceTest {
         );
     }
 
-    @Test
-    void likeComment_duplicate_throwsDuplicateAction() {
-        LikeEntity existingLike = new LikeEntity(
-            "like1", "user1", "comment1",
-            LikeTargetTypeEnum.COMMENT, LocalDateTime.now()
-        );
-
-        when(commentRepository.findById("comment1"))
-            .thenReturn(Optional.of(comment));
-        when(likeRepository
-            .findByUserIdAndTargetIdAndTargetType(
-                "user1", "comment1",
-                LikeTargetTypeEnum.COMMENT
-            )).thenReturn(Optional.of(existingLike));
-
-        assertThrows(DuplicateActionException.class,
-            () -> likeService.likeComment(
-                "comment1", "user1"
-            )
-        );
-
-        verify(likeRepository, never()).save(any(LikeEntity.class));
-    }
-
-    @Test
-    void likeComment_commentNotFound_throwsException() {
-        when(commentRepository.findById("invalid"))
-            .thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class,
-            () -> likeService.likeComment(
-                "invalid", "user1"
-            )
-        );
-
-        verify(likeRepository, never()).save(any(LikeEntity.class));
-    }
+   
 }

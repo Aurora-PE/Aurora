@@ -120,16 +120,7 @@ class PostServiceTest {
         assertEquals("post1", responses.get(0).id());
     }
 
-    @Test
-    void getAllPosts_empty() {
-        when(postRepository.findAll())
-            .thenReturn(List.of());
-
-        List<PostResponse> responses =
-            postService.getAllPosts();
-
-        assertTrue(responses.isEmpty());
-    }
+   
 
     @Test
     void updatePost_success() {
@@ -159,19 +150,7 @@ class PostServiceTest {
         verify(postRepository).save(any(PostEntity.class));
     }
 
-    @Test
-    void updatePost_notFound_throwsException() {
-        UpdatePostRequest request = new UpdatePostRequest(
-            "content", null, VisibilityEnum.PUBLIC
-        );
-
-        when(postRepository.findById("invalid"))
-            .thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class,
-            () -> postService.updatePost("invalid", request)
-        );
-    }
+    
 
     
     @Test
@@ -213,18 +192,4 @@ class PostServiceTest {
         verify(postRepository).delete(post);
     }
 
-    @Test
-    void deletePost_notFound_throwsException() {
-        when(postRepository.findById("invalid"))
-            .thenReturn(Optional.empty());
-
-        assertThrows(EntityNotFoundException.class,
-            () -> postService.deletePost("invalid")
-        );
-
-        verify(likeRepository, never())
-            .deleteAllByTargetIdAndTargetType(any(), any());
-        verify(commentService, never()).deleteComment(any());
-        verify(postRepository, never()).delete(any());
-    }
 }

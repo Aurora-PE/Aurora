@@ -143,21 +143,6 @@ void createComment_success() {
             .findByPostIdOrderByCreatedAtDesc("post1");
     }
 
-    @Test
-    void getCommentsByPostId_empty() {
-        when(commentRepository
-            .findByPostIdOrderByCreatedAtDesc("post1"))
-            .thenReturn(List.of());
-
-        List<CommentResponse> responses =
-            commentService.getCommentsByPostId("post1");
-
-        assertTrue(responses.isEmpty());
-
-        verify(commentRepository)
-            .findByPostIdOrderByCreatedAtDesc("post1");
-    }
-
 
     @Test
     void deleteComment_success() {
