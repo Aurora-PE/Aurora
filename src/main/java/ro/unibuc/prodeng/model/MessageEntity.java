@@ -16,7 +16,7 @@ public record MessageEntity(
         LocalDateTime createdAt
 ) {
 
-    public MessageEntity(String conversationId, String senderId, String content) {
-        this(null, conversationId, senderId, content, false, LocalDateTime.now());
+    public MessageEntity(String id, String conversationId, String senderId, String content) {
+        this(id, conversationId, senderId, content, false, LocalDateTime.now());
     }
 }
