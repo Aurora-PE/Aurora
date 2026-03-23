@@ -56,6 +56,7 @@ public class MessageService {
         ConversationEntity conversation = conversationService.getOrCreateConversation(senderId, receiverId);
 
         MessageEntity message = new MessageEntity(
+                null,
                 conversation.id(),
                 senderId,
                 request.content()

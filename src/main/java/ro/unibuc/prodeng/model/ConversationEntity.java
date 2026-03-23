@@ -15,7 +15,7 @@ public record ConversationEntity(
         LocalDateTime lastMessageAt
 ) {
 
-    public ConversationEntity(String participant1Id, String participant2Id) {
-        this(null, participant1Id, participant2Id, LocalDateTime.now(), LocalDateTime.now());
+    public ConversationEntity(String id, String participant1Id, String participant2Id) {
+        this(id, participant1Id, participant2Id, LocalDateTime.now(), LocalDateTime.now());
     }
 }

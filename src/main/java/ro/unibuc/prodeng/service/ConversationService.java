@@ -56,7 +56,7 @@ public class ConversationService {
                 .findByParticipant1IdAndParticipant2Id(userA, userB)
                 .or(() -> conversationRepository.findByParticipant2IdAndParticipant1Id(userA, userB))
                 .orElseGet(() -> conversationRepository.save(
-                        new ConversationEntity(userA, userB)
+                        new ConversationEntity(null, userA, userB)
                 ));
     }
 
