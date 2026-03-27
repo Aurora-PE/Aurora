@@ -47,3 +47,10 @@ infrastructure/loki/durable/
 
 ### Claude Code ###
 .claude/
+
+# JMeter Performance Testing Downloads & Reports
+apache-jmeter-*/
+apache-jmeter-*.tgz
+results.csv
+jmeter-report/
+jmeter.log
