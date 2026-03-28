@@ -9,7 +9,8 @@
     },
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
       "moby": false // Install Docker CE instead of OSS Moby build; not part of Trixie distribution
-    }
+    },
+    "ghcr.io/devcontainers/features/desktop-lite:1": {}
   },
   "customizations": {
     "vscode": {
