@@ -74,34 +74,34 @@ class CommentServiceTest {
 
 
     @Test
-void createComment_success() {
-    CreateCommentRequest request =
-        new CreateCommentRequest("user1", "Nice post!");
+    void createComment_success() {
+        CreateCommentRequest request =
+            new CreateCommentRequest("user1", "Nice post!");
 
-    when(postRepository.findById("post1"))
-        .thenReturn(Optional.of(post));
-    when(commentRepository.save(any(CommentEntity.class)))
-        .thenReturn(comment);
-    when(userRepository.findById("user1"))
-        .thenReturn(Optional.of(user));
+        when(postRepository.findById("post1"))
+            .thenReturn(Optional.of(post));
+        when(commentRepository.save(any(CommentEntity.class)))
+            .thenReturn(comment);
+        when(userRepository.findById("user1"))
+            .thenReturn(Optional.of(user));
 
-    CommentResponse response =
-        commentService.createComment("post1", request);
+        CommentResponse response =
+            commentService.createComment("post1", request);
 
-    assertNotNull(response);
-    assertEquals("comment1", response.id());
-    assertEquals("post1", response.postId());
-    assertEquals("user1", response.authorId());
-    assertEquals("Nice post!", response.content());
-    assertEquals(0, response.likesCount());
+        assertNotNull(response);
+        assertEquals("comment1", response.id());
+        assertEquals("post1", response.postId());
+        assertEquals("user1", response.authorId());
+        assertEquals("Nice post!", response.content());
+        assertEquals(0, response.likesCount());
 
-    verify(postRepository, times(2)).findById("post1");
-    verify(commentRepository).save(any(CommentEntity.class));
-    verify(userRepository).findById("user1");
-    verify(notificationService).createNotification(
-        eq("author1"), anyString(), eq("user1")
-    );
-}
+        verify(postRepository, times(2)).findById("post1");
+        verify(commentRepository).save(any(CommentEntity.class));
+        verify(userRepository).findById("user1");
+        verify(notificationService).createNotification(
+            eq("author1"), anyString(), eq("user1")
+        );
+    }
 
     @Test
     void createComment_postNotFound() {

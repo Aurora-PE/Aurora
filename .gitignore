@@ -53,4 +53,5 @@ apache-jmeter-*/
 apache-jmeter-*.tgz
 results.csv
 jmeter-report/
-jmeter.log
+jmeter.logresults.jtl
+**/performance/report/
