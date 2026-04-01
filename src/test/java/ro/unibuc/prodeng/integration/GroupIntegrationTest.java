@@ -96,7 +96,7 @@ class GroupIntegrationTest extends IntegrationTestBase {
         mockMvc.perform(get("/api/groups/" + groupId + "/members")
                 .header("Authorization", "Bearer " + creatorToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(2))) // Creator + new Member
+                .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].role", is("CREATOR")))
                 .andExpect(jsonPath("$[1].username", is("Invitee")))
                 .andExpect(jsonPath("$[1].role", is("MEMBER")));

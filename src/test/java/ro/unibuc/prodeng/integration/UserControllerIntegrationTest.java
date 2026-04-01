@@ -33,7 +33,6 @@ class UserControllerIntegrationTest extends IntegrationTestBase {
         userRepository.deleteAll();
     }
 
-    // Helper method to create a user and return their database ID
     private String createUserAndGetId(String username, String email) throws Exception {
         CreateUserRequest request = new CreateUserRequest(username, email, "password123", "Bio", "url", false);
         

@@ -55,4 +55,5 @@ results.csv
 jmeter-report/
 jmeter.logresults.jtl
 **/performance/report/
+jmeter.log
 /report
