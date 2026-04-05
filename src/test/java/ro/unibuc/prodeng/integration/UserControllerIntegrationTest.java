@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
 
+// Triggering CI build 1
 @DisplayName("UserController Integration Tests")
 class UserControllerIntegrationTest extends IntegrationTestBase {
 
