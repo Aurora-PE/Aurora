@@ -10,7 +10,7 @@ import ro.unibuc.prodeng.service.CommentService;
 import java.util.List;
 
 // comment
-
+// comment 2
 @RestController
 @RequestMapping("/api/posts/{postId}/comments")
 public class CommentController {
