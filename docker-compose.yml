@@ -1,7 +1,6 @@
 services:
   prod-eng:
-    image: prod-eng-img
-    build: .
+    image: ${PROD_ENG_IMAGE:-prod-eng-img}
     ports:
       - 8080:8080
       # Port for debug
@@ -24,6 +23,8 @@ services:
       - /usr/bin/docker:/usr/bin/docker
       - ./Dockerfile:/Dockerfile
       - /usr/libexec/docker/cli-plugins/docker-compose:/usr/libexec/docker/cli-plugins/docker-compose
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     profiles:
       - "prod-eng-service"
     user: 0:0
