@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ro.unibuc.prodeng.request.CreateGroupRequest;
 import ro.unibuc.prodeng.response.GroupResponse;
 import ro.unibuc.prodeng.service.GroupService;
+import ro.unibuc.prodeng.service.MetricsService;
 import ro.unibuc.prodeng.util.JwtUtil;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,6 +33,7 @@ class GroupControllerTest {
     private ObjectMapper objectMapper;
 
     @Mock private GroupService groupService;
+    @Mock private MetricsService metricsService;
     @InjectMocks private GroupController groupController;
 
     private MockedStatic<JwtUtil> mockedJwtUtil;

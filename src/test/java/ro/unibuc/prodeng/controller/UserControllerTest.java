@@ -18,6 +18,7 @@ import ro.unibuc.prodeng.request.UpdateUserRequest;
 import ro.unibuc.prodeng.response.LoginResponse;
 import ro.unibuc.prodeng.response.UserResponse;
 import ro.unibuc.prodeng.response.UserSummaryResponse;
+import ro.unibuc.prodeng.service.MetricsService;
 import ro.unibuc.prodeng.service.UserService;
 import ro.unibuc.prodeng.util.JwtUtil;
 import java.time.LocalDateTime;
@@ -36,6 +37,7 @@ class UserControllerTest {
     private ObjectMapper objectMapper;
 
     @Mock private UserService userService;
+    @Mock private MetricsService metricsService;
     @InjectMocks private UserController userController;
 
     private MockedStatic<JwtUtil> mockedJwtUtil;

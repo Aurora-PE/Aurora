@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ro.unibuc.prodeng.request.UpdateRoleRequest;
 import ro.unibuc.prodeng.service.GroupMemberService;
+import ro.unibuc.prodeng.service.MetricsService;
 import ro.unibuc.prodeng.util.JwtUtil;
 import java.util.List;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -27,6 +28,7 @@ class GroupMemberControllerTest {
     private ObjectMapper objectMapper;
 
     @Mock private GroupMemberService groupMemberService;
+    @Mock private MetricsService metricsService;
     @InjectMocks private GroupMemberController groupMemberController;
 
     private MockedStatic<JwtUtil> mockedJwtUtil;

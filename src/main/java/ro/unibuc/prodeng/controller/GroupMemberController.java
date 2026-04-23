@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ro.unibuc.prodeng.request.UpdateRoleRequest;
 import ro.unibuc.prodeng.response.GroupMemberResponse;
 import ro.unibuc.prodeng.service.GroupMemberService;
+import ro.unibuc.prodeng.service.MetricsService;
 import ro.unibuc.prodeng.util.JwtUtil;
 
 import java.util.List;
@@ -13,11 +14,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/groups/{groupId}/members")
 public class GroupMemberController {
-
     private final GroupMemberService groupMemberService;
+    private final MetricsService metricsService;
 
-    public GroupMemberController(GroupMemberService groupMemberService) {
+    public GroupMemberController(GroupMemberService groupMemberService, MetricsService metricsService) {
         this.groupMemberService = groupMemberService;
+        this.metricsService = metricsService;
     }
 
     @GetMapping
@@ -35,6 +37,7 @@ public class GroupMemberController {
             @PathVariable String userId) {
         String requesterId = JwtUtil.extractRequesterId(authHeader);
         groupMemberService.kickMember(requesterId, groupId, userId);
+        metricsService.recordMemberKicked(); // Domain Metric
         return ResponseEntity.noContent().build();
     }
 

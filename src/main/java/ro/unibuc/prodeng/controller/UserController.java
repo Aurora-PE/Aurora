@@ -1,5 +1,6 @@
 package ro.unibuc.prodeng.controller;
-
+import ro.unibuc.prodeng.service.MetricsService;
+import io.micrometer.core.instrument.Timer;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +21,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final MetricsService metricsService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, MetricsService metricsService) {
         this.userService = userService;
+        this.metricsService = metricsService;
     }
 
     @PostMapping
@@ -31,7 +34,14 @@ public class UserController {
         @RequestBody
         CreateUserRequest request
     ) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(request));
+        try {
+            UserResponse response = userService.createUser(request);
+            metricsService.recordUserCreated();
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (Exception e) {
+            metricsService.recordError();
+            throw e;
+        }
     }
 
     @PostMapping("/login")
@@ -39,7 +49,16 @@ public class UserController {
         @Valid
         @RequestBody LoginRequest request
     ) {
-        return ResponseEntity.ok(userService.login(request.email(), request.password()));
+       Timer.Sample timer = metricsService.startTimer();
+        try {
+            LoginResponse response = userService.login(request.email(), request.password());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            metricsService.recordError();
+            throw e;
+        } finally {
+            metricsService.stopLoginTimer(timer);
+        }
     }
 
     @GetMapping

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import ro.unibuc.prodeng.response.UserResponse;
 import ro.unibuc.prodeng.response.UserSummaryResponse;
 import ro.unibuc.prodeng.service.FollowService;
+import ro.unibuc.prodeng.service.MetricsService;
 import ro.unibuc.prodeng.util.JwtUtil;
 
 @RestController
@@ -16,9 +17,11 @@ import ro.unibuc.prodeng.util.JwtUtil;
 public class FollowController {
 
     private final FollowService followService;
+    private final MetricsService metricsService;
 
-    public FollowController(FollowService followService) {
+    public FollowController(FollowService followService, MetricsService metricsService) {
         this.followService = followService;
+        this.metricsService = metricsService;
     }
 
     @PostMapping("/{id}/follow")
@@ -27,6 +30,7 @@ public class FollowController {
             @PathVariable String id) {
         String requesterId = JwtUtil.extractRequesterId(authHeader);
         followService.followUser(requesterId, id);
+        metricsService.recordFollow();
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
