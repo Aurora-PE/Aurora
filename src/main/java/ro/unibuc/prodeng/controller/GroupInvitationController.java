@@ -10,15 +10,18 @@ import jakarta.validation.Valid;
 import ro.unibuc.prodeng.request.CreateInviteRequest;
 import ro.unibuc.prodeng.response.GroupInvitationResponse;
 import ro.unibuc.prodeng.service.GroupInvitationService;
+import ro.unibuc.prodeng.service.MetricsService;
 import ro.unibuc.prodeng.util.JwtUtil;
 
 @RestController
 @RequestMapping("/api/groups")
 public class GroupInvitationController {
     private final GroupInvitationService groupInviteService;
+    private final MetricsService metricsService;
 
-    public GroupInvitationController(GroupInvitationService groupInviteService) {
+    public GroupInvitationController(GroupInvitationService groupInviteService, MetricsService metricsService) {
         this.groupInviteService = groupInviteService;
+        this.metricsService = metricsService;
     }
 
     @PostMapping("/{groupId}/invitations")
@@ -27,7 +30,9 @@ public class GroupInvitationController {
             @PathVariable String groupId,
             @Valid @RequestBody CreateInviteRequest request) {
         String requesterId = JwtUtil.extractRequesterId(authHeader);
-        return ResponseEntity.status(HttpStatus.CREATED).body(groupInviteService.createInvitation(requesterId, groupId, request));
+        GroupInvitationResponse response = groupInviteService.createInvitation(requesterId, groupId, request);
+        metricsService.incrementPendingInvitations();
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/invitations")
@@ -43,6 +48,7 @@ public class GroupInvitationController {
             @PathVariable String invitationId) {
         String requesterId = JwtUtil.extractRequesterId(authHeader);
         groupInviteService.acceptInvitation(requesterId, invitationId);
+        metricsService.decrementPendingInvitations();
         return ResponseEntity.ok().build();
     }
 
@@ -52,6 +58,7 @@ public class GroupInvitationController {
             @PathVariable String invitationId) {
         String requesterId = JwtUtil.extractRequesterId(authHeader);
         groupInviteService.declineInvitation(requesterId, invitationId);
+        metricsService.decrementPendingInvitations();
         return ResponseEntity.ok().build();
     }
 }

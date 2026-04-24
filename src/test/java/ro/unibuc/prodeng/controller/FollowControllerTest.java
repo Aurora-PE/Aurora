@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ro.unibuc.prodeng.service.FollowService;
+import ro.unibuc.prodeng.service.MetricsService;
 import ro.unibuc.prodeng.util.JwtUtil;
 import java.util.List;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -23,6 +24,7 @@ class FollowControllerTest {
     private MockMvc mockMvc;
 
     @Mock private FollowService followService;
+    @Mock private MetricsService metricsService;
     @InjectMocks private FollowController followController;
 
     private MockedStatic<JwtUtil> mockedJwtUtil;
