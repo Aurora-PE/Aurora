@@ -240,4 +240,4 @@ Authorization: Bearer {{loginUser2.response.body.token}}
 
 ### Delete First User
 DELETE http://localhost:8080/api/users/self
-Authorization: Bearer {{loginUser1.response.body.token}}## Description
+Authorization: Bearer {{loginUser1.response.body.token}}

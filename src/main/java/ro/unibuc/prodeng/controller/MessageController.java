@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ro.unibuc.prodeng.request.SendMessageRequest;
 import ro.unibuc.prodeng.response.MessageResponse;
 import ro.unibuc.prodeng.service.MessageService;
+import ro.unibuc.prodeng.service.MetricsService;
 import ro.unibuc.prodeng.util.JwtUtil;
 
 import java.util.List;
@@ -15,9 +16,11 @@ import java.util.List;
 public class MessageController {
 
     private final MessageService messageService;
+    private final MetricsService metricsService;
 
-    public MessageController(MessageService messageService) {
+    public MessageController(MessageService messageService, MetricsService metricsService) {
         this.messageService = messageService;
+        this.metricsService = metricsService;
     }
 
     @PostMapping("/{receiverId}")
@@ -28,6 +31,8 @@ public class MessageController {
     ) {
 
         String senderId = JwtUtil.extractRequesterId(authHeader);
+
+        metricsService.recordMessagesCreated();
 
         return ResponseEntity.ok(
                 messageService.sendMessage(senderId, receiverId, request)
@@ -59,5 +64,4 @@ public class MessageController {
                 messageService.markMessageRead(requesterId, messageId)
         );
     }
-    //Test Jenkins Pipeline 2
 }

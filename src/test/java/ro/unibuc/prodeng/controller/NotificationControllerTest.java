@@ -13,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ro.unibuc.prodeng.response.NotificationResponse;
+import ro.unibuc.prodeng.service.MetricsService;
 import ro.unibuc.prodeng.service.NotificationService;
 import ro.unibuc.prodeng.util.JwtUtil;
 
@@ -31,6 +32,7 @@ class NotificationControllerTest {
     private ObjectMapper objectMapper;
 
     @Mock private NotificationService notificationService;
+    @Mock private MetricsService metricsService;
     @InjectMocks private NotificationController notificationController;
 
     private MockedStatic<JwtUtil> mockedJwtUtil;
@@ -106,7 +108,7 @@ class NotificationControllerTest {
     @Test
     void testMarkAllNotificationsRead_validRequest_returnsNoContent() throws Exception {
 
-        doNothing().when(notificationService).markAllNotificationsRead("user1");
+        when(notificationService.markAllNotificationsRead("user1")).thenReturn(0);
 
         mockMvc.perform(patch("/api/notifications/read-all")
                 .header("Authorization", "Bearer token"))
