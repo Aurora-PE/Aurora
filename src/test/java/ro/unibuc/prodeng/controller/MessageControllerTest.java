@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ro.unibuc.prodeng.request.SendMessageRequest;
 import ro.unibuc.prodeng.response.MessageResponse;
 import ro.unibuc.prodeng.service.MessageService;
+import ro.unibuc.prodeng.service.MetricsService;
 import ro.unibuc.prodeng.util.JwtUtil;
 
 import java.time.LocalDateTime;
@@ -33,6 +34,7 @@ class MessageControllerTest {
     private ObjectMapper objectMapper;
 
     @Mock private MessageService messageService;
+    @Mock private MetricsService metricsService;
     @InjectMocks private MessageController messageController;
 
     private MockedStatic<JwtUtil> mockedJwtUtil;

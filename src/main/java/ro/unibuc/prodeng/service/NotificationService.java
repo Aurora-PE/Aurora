@@ -13,9 +13,11 @@ import java.util.List;
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
+    private final MetricsService metricsService;
 
-    public NotificationService(NotificationRepository notificationRepository) {
+    public NotificationService(NotificationRepository notificationRepository, MetricsService metricsService) {
         this.notificationRepository = notificationRepository;
+        this.metricsService = metricsService;
     }
 
     public List<NotificationResponse> getUserNotifications(String userId) {
@@ -44,6 +46,9 @@ public class NotificationService {
                 sourceUserId
         );
 
+        metricsService.incrementUnreadNotifications();
+        metricsService.recordNotificationsCreated();
+
         notificationRepository.save(notification);
     }
 
@@ -70,7 +75,7 @@ public class NotificationService {
         return toResponse(saved);
     }
 
-    public void markAllNotificationsRead(String userId) {
+    public int markAllNotificationsRead(String userId) {
 
         List<NotificationEntity> notifications =
                 notificationRepository.findByUserIdAndReadFalseOrderByCreatedAtDesc(userId);
@@ -87,6 +92,7 @@ public class NotificationService {
                 .toList();
 
         notificationRepository.saveAll(updatedNotifications);
+        return notifications.size();
     }
 
     private NotificationResponse toResponse(NotificationEntity entity) {
