@@ -1,0 +1,201 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1774953725801,27,Create user,201,,Thread Group 1-1,text,true,,355,389,1,1,http://localhost:8080/api/users,25,0,17
+1774953725848,3,Login User,200,,Thread Group 1-1,text,true,,525,288,1,1,http://localhost:8080/api/users/login,3,0,0
+1774953725852,2,Create post ,201,,Thread Group 1-1,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953725855,12,Get All Posts,200,,Thread Group 1-1,text,true,,115029,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953725868,3,Create user,201,,Thread Group 1-1,text,true,,355,389,1,1,http://localhost:8080/api/users,3,0,0
+1774953725872,2,Login User,200,,Thread Group 1-1,text,true,,525,288,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953725875,2,Create post ,201,,Thread Group 1-1,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953725878,17,Get All Posts,200,,Thread Group 1-1,text,true,,115219,195,1,1,http://localhost:8080/api/posts,16,0,0
+1774953725896,4,Create user,201,,Thread Group 1-1,text,true,,355,389,1,1,http://localhost:8080/api/users,4,0,0
+1774953725901,3,Login User,200,,Thread Group 1-1,text,true,,524,288,1,1,http://localhost:8080/api/users/login,3,0,0
+1774953725904,3,Create post ,201,,Thread Group 1-1,text,true,,367,343,1,1,http://localhost:8080/api/posts,3,0,0
+1774953725907,12,Get All Posts,200,,Thread Group 1-1,text,true,,115410,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953725920,3,Create user,201,,Thread Group 1-1,text,true,,355,389,1,1,http://localhost:8080/api/users,3,0,0
+1774953725923,3,Login User,200,,Thread Group 1-1,text,true,,526,288,1,1,http://localhost:8080/api/users/login,3,0,0
+1774953725927,2,Create post ,201,,Thread Group 1-1,text,true,,368,343,1,1,http://localhost:8080/api/posts,1,0,0
+1774953725929,12,Get All Posts,200,,Thread Group 1-1,text,true,,115600,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953725942,3,Create user,201,,Thread Group 1-1,text,true,,355,389,1,1,http://localhost:8080/api/users,3,0,0
+1774953725945,3,Login User,200,,Thread Group 1-1,text,true,,526,288,1,1,http://localhost:8080/api/users/login,3,0,0
+1774953725948,2,Create post ,201,,Thread Group 1-1,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953725951,10,Get All Posts,200,,Thread Group 1-1,text,true,,115790,195,1,1,http://localhost:8080/api/posts,9,0,0
+1774953726735,12,Create user,201,,Thread Group 1-2,text,true,,355,389,1,1,http://localhost:8080/api/users,12,0,1
+1774953726749,8,Login User,200,,Thread Group 1-2,text,true,,526,288,1,1,http://localhost:8080/api/users/login,7,0,0
+1774953726759,5,Create post ,201,,Thread Group 1-2,text,true,,367,342,1,1,http://localhost:8080/api/posts,5,0,0
+1774953726766,33,Get All Posts,200,,Thread Group 1-2,text,true,,115979,195,1,1,http://localhost:8080/api/posts,31,0,0
+1774953726800,4,Create user,201,,Thread Group 1-2,text,true,,355,389,1,1,http://localhost:8080/api/users,4,0,0
+1774953726805,3,Login User,200,,Thread Group 1-2,text,true,,526,288,1,1,http://localhost:8080/api/users/login,3,0,0
+1774953726809,2,Create post ,201,,Thread Group 1-2,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953726811,13,Get All Posts,200,,Thread Group 1-2,text,true,,116168,195,1,1,http://localhost:8080/api/posts,12,0,0
+1774953726825,3,Create user,201,,Thread Group 1-2,text,true,,355,389,1,1,http://localhost:8080/api/users,3,0,0
+1774953726829,2,Login User,200,,Thread Group 1-2,text,true,,526,288,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953726832,2,Create post ,201,,Thread Group 1-2,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953726835,11,Get All Posts,200,,Thread Group 1-2,text,true,,116358,195,1,1,http://localhost:8080/api/posts,10,0,0
+1774953726847,3,Create user,201,,Thread Group 1-2,text,true,,355,389,1,1,http://localhost:8080/api/users,3,0,0
+1774953726851,2,Login User,200,,Thread Group 1-2,text,true,,526,288,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953726853,3,Create post ,201,,Thread Group 1-2,text,true,,368,343,1,1,http://localhost:8080/api/posts,3,0,0
+1774953726856,11,Get All Posts,200,,Thread Group 1-2,text,true,,116548,195,1,1,http://localhost:8080/api/posts,10,0,0
+1774953726868,3,Create user,201,,Thread Group 1-2,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953726872,2,Login User,200,,Thread Group 1-2,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953726875,2,Create post ,201,,Thread Group 1-2,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953726878,11,Get All Posts,200,,Thread Group 1-2,text,true,,116738,195,1,1,http://localhost:8080/api/posts,10,0,0
+1774953727734,3,Create user,201,,Thread Group 1-3,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953727737,2,Login User,200,,Thread Group 1-3,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953727739,2,Create post ,201,,Thread Group 1-3,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953727741,12,Get All Posts,200,,Thread Group 1-3,text,true,,116927,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953727753,3,Create user,201,,Thread Group 1-3,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953727757,2,Login User,200,,Thread Group 1-3,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953727759,2,Create post ,201,,Thread Group 1-3,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953727761,12,Get All Posts,200,,Thread Group 1-3,text,true,,117116,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953727774,3,Create user,201,,Thread Group 1-3,text,true,,356,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953727777,3,Login User,200,,Thread Group 1-3,text,true,,528,289,1,1,http://localhost:8080/api/users/login,3,0,0
+1774953727780,2,Create post ,201,,Thread Group 1-3,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953727782,13,Get All Posts,200,,Thread Group 1-3,text,true,,117306,195,1,1,http://localhost:8080/api/posts,12,0,0
+1774953727796,2,Create user,201,,Thread Group 1-3,text,true,,357,391,1,1,http://localhost:8080/api/users,2,0,0
+1774953727799,2,Login User,200,,Thread Group 1-3,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953727802,1,Create post ,201,,Thread Group 1-3,text,true,,368,343,1,1,http://localhost:8080/api/posts,1,0,0
+1774953727804,14,Get All Posts,200,,Thread Group 1-3,text,true,,117496,195,1,1,http://localhost:8080/api/posts,12,0,0
+1774953727819,5,Create user,201,,Thread Group 1-3,text,true,,355,391,1,1,http://localhost:8080/api/users,5,0,0
+1774953727825,2,Login User,200,,Thread Group 1-3,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953727828,2,Create post ,201,,Thread Group 1-3,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953727830,19,Get All Posts,200,,Thread Group 1-3,text,true,,117686,195,1,1,http://localhost:8080/api/posts,17,0,0
+1774953728733,5,Create user,201,,Thread Group 1-4,text,true,,357,391,1,1,http://localhost:8080/api/users,5,0,1
+1774953728738,3,Login User,200,,Thread Group 1-4,text,true,,528,289,1,1,http://localhost:8080/api/users/login,3,0,0
+1774953728741,2,Create post ,201,,Thread Group 1-4,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953728743,11,Get All Posts,200,,Thread Group 1-4,text,true,,117876,195,1,1,http://localhost:8080/api/posts,10,0,0
+1774953728755,3,Create user,201,,Thread Group 1-4,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953728758,3,Login User,200,,Thread Group 1-4,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953728761,2,Create post ,201,,Thread Group 1-4,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953728763,11,Get All Posts,200,,Thread Group 1-4,text,true,,118066,195,1,1,http://localhost:8080/api/posts,10,0,0
+1774953728774,3,Create user,201,,Thread Group 1-4,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953728778,1,Login User,200,,Thread Group 1-4,text,true,,528,289,1,1,http://localhost:8080/api/users/login,1,0,0
+1774953728780,2,Create post ,201,,Thread Group 1-4,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953728783,10,Get All Posts,200,,Thread Group 1-4,text,true,,118256,195,1,1,http://localhost:8080/api/posts,9,0,0
+1774953728793,3,Create user,201,,Thread Group 1-4,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953728797,2,Login User,200,,Thread Group 1-4,text,true,,528,289,1,1,http://localhost:8080/api/users/login,1,0,0
+1774953728799,2,Create post ,201,,Thread Group 1-4,text,true,,368,343,1,1,http://localhost:8080/api/posts,1,0,0
+1774953728801,11,Get All Posts,200,,Thread Group 1-4,text,true,,118444,195,1,1,http://localhost:8080/api/posts,10,0,0
+1774953728812,3,Create user,201,,Thread Group 1-4,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953728815,2,Login User,200,,Thread Group 1-4,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953728818,1,Create post ,201,,Thread Group 1-4,text,true,,366,341,1,1,http://localhost:8080/api/posts,1,0,0
+1774953728820,10,Get All Posts,200,,Thread Group 1-4,text,true,,118632,195,1,1,http://localhost:8080/api/posts,9,0,0
+1774953729733,11,Create user,201,,Thread Group 1-5,text,true,,357,391,1,1,http://localhost:8080/api/users,11,0,2
+1774953729746,7,Login User,200,,Thread Group 1-5,text,true,,528,289,1,1,http://localhost:8080/api/users/login,7,0,0
+1774953729755,6,Create post ,201,,Thread Group 1-5,text,true,,368,343,1,1,http://localhost:8080/api/posts,5,0,0
+1774953729762,35,Get All Posts,200,,Thread Group 1-5,text,true,,118822,195,1,1,http://localhost:8080/api/posts,34,0,0
+1774953729798,4,Create user,201,,Thread Group 1-5,text,true,,357,391,1,1,http://localhost:8080/api/users,4,0,0
+1774953729803,2,Login User,200,,Thread Group 1-5,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953729806,2,Create post ,201,,Thread Group 1-5,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953729809,16,Get All Posts,200,,Thread Group 1-5,text,true,,119012,195,1,1,http://localhost:8080/api/posts,14,0,0
+1774953729825,3,Create user,201,,Thread Group 1-5,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953729829,2,Login User,200,,Thread Group 1-5,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953729832,1,Create post ,201,,Thread Group 1-5,text,true,,367,343,1,1,http://localhost:8080/api/posts,1,0,0
+1774953729834,12,Get All Posts,200,,Thread Group 1-5,text,true,,119203,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953729846,2,Create user,201,,Thread Group 1-5,text,true,,357,391,1,1,http://localhost:8080/api/users,2,0,0
+1774953729849,3,Login User,200,,Thread Group 1-5,text,true,,528,289,1,1,http://localhost:8080/api/users/login,3,0,0
+1774953729852,1,Create post ,201,,Thread Group 1-5,text,true,,368,343,1,1,http://localhost:8080/api/posts,1,0,0
+1774953729854,12,Get All Posts,200,,Thread Group 1-5,text,true,,119393,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953729866,3,Create user,201,,Thread Group 1-5,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953729869,4,Login User,200,,Thread Group 1-5,text,true,,528,289,1,1,http://localhost:8080/api/users/login,4,0,0
+1774953729873,2,Create post ,201,,Thread Group 1-5,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953729875,13,Get All Posts,200,,Thread Group 1-5,text,true,,119583,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953730732,7,Create user,201,,Thread Group 1-6,text,true,,357,391,1,1,http://localhost:8080/api/users,7,0,1
+1774953730741,5,Login User,200,,Thread Group 1-6,text,true,,528,289,1,1,http://localhost:8080/api/users/login,5,0,0
+1774953730747,5,Create post ,201,,Thread Group 1-6,text,true,,368,343,1,1,http://localhost:8080/api/posts,5,0,0
+1774953730753,32,Get All Posts,200,,Thread Group 1-6,text,true,,119773,195,1,1,http://localhost:8080/api/posts,30,0,0
+1774953730785,4,Create user,201,,Thread Group 1-6,text,true,,357,391,1,1,http://localhost:8080/api/users,4,0,0
+1774953730790,3,Login User,200,,Thread Group 1-6,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953730793,2,Create post ,201,,Thread Group 1-6,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953730796,13,Get All Posts,200,,Thread Group 1-6,text,true,,119963,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953730809,3,Create user,201,,Thread Group 1-6,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953730812,2,Login User,200,,Thread Group 1-6,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953730815,1,Create post ,201,,Thread Group 1-6,text,true,,368,343,1,1,http://localhost:8080/api/posts,1,0,0
+1774953730816,13,Get All Posts,200,,Thread Group 1-6,text,true,,120153,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953730829,3,Create user,201,,Thread Group 1-6,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953730832,2,Login User,200,,Thread Group 1-6,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953730834,2,Create post ,201,,Thread Group 1-6,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953730836,12,Get All Posts,200,,Thread Group 1-6,text,true,,120343,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953730849,2,Create user,201,,Thread Group 1-6,text,true,,357,391,1,1,http://localhost:8080/api/users,2,0,0
+1774953730852,2,Login User,200,,Thread Group 1-6,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953730854,2,Create post ,201,,Thread Group 1-6,text,true,,367,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953730856,12,Get All Posts,200,,Thread Group 1-6,text,true,,120533,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953731733,4,Create user,201,,Thread Group 1-7,text,true,,357,391,1,1,http://localhost:8080/api/users,4,0,1
+1774953731737,2,Login User,200,,Thread Group 1-7,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953731740,2,Create post ,201,,Thread Group 1-7,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953731743,13,Get All Posts,200,,Thread Group 1-7,text,true,,120723,195,1,1,http://localhost:8080/api/posts,12,0,0
+1774953731756,2,Create user,201,,Thread Group 1-7,text,true,,357,391,1,1,http://localhost:8080/api/users,2,0,0
+1774953731759,2,Login User,200,,Thread Group 1-7,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953731761,1,Create post ,201,,Thread Group 1-7,text,true,,367,343,1,1,http://localhost:8080/api/posts,1,0,0
+1774953731763,11,Get All Posts,200,,Thread Group 1-7,text,true,,120913,195,1,1,http://localhost:8080/api/posts,9,0,0
+1774953731774,3,Create user,201,,Thread Group 1-7,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953731777,2,Login User,200,,Thread Group 1-7,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953731779,2,Create post ,201,,Thread Group 1-7,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953731781,10,Get All Posts,200,,Thread Group 1-7,text,true,,121102,195,1,1,http://localhost:8080/api/posts,9,0,0
+1774953731791,3,Create user,201,,Thread Group 1-7,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953731794,2,Login User,200,,Thread Group 1-7,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953731796,2,Create post ,201,,Thread Group 1-7,text,true,,367,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953731798,11,Get All Posts,200,,Thread Group 1-7,text,true,,121292,195,1,1,http://localhost:8080/api/posts,9,0,0
+1774953731809,3,Create user,201,,Thread Group 1-7,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953731812,2,Login User,200,,Thread Group 1-7,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953731814,2,Create post ,201,,Thread Group 1-7,text,true,,367,342,1,1,http://localhost:8080/api/posts,2,0,0
+1774953731816,11,Get All Posts,200,,Thread Group 1-7,text,true,,121481,195,1,1,http://localhost:8080/api/posts,10,0,0
+1774953732733,9,Create user,201,,Thread Group 1-8,text,true,,357,391,1,1,http://localhost:8080/api/users,9,0,2
+1774953732744,6,Login User,200,,Thread Group 1-8,text,true,,527,289,1,1,http://localhost:8080/api/users/login,6,0,0
+1774953732752,4,Create post ,201,,Thread Group 1-8,text,true,,368,343,1,1,http://localhost:8080/api/posts,4,0,0
+1774953732757,39,Get All Posts,200,,Thread Group 1-8,text,true,,121671,195,1,1,http://localhost:8080/api/posts,36,0,0
+1774953732796,5,Create user,201,,Thread Group 1-8,text,true,,356,391,1,1,http://localhost:8080/api/users,5,0,0
+1774953732802,3,Login User,200,,Thread Group 1-8,text,true,,528,289,1,1,http://localhost:8080/api/users/login,3,0,0
+1774953732805,5,Create post ,201,,Thread Group 1-8,text,true,,368,343,1,1,http://localhost:8080/api/posts,4,0,0
+1774953732810,13,Get All Posts,200,,Thread Group 1-8,text,true,,121861,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953732823,3,Create user,201,,Thread Group 1-8,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953732826,2,Login User,200,,Thread Group 1-8,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953732829,1,Create post ,201,,Thread Group 1-8,text,true,,368,343,1,1,http://localhost:8080/api/posts,1,0,0
+1774953732830,11,Get All Posts,200,,Thread Group 1-8,text,true,,122051,195,1,1,http://localhost:8080/api/posts,10,0,0
+1774953732842,2,Create user,201,,Thread Group 1-8,text,true,,357,391,1,1,http://localhost:8080/api/users,2,0,0
+1774953732845,2,Login User,200,,Thread Group 1-8,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953732847,2,Create post ,201,,Thread Group 1-8,text,true,,367,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953732849,11,Get All Posts,200,,Thread Group 1-8,text,true,,122241,195,1,1,http://localhost:8080/api/posts,10,0,0
+1774953732861,2,Create user,201,,Thread Group 1-8,text,true,,357,391,1,1,http://localhost:8080/api/users,2,0,0
+1774953732864,2,Login User,200,,Thread Group 1-8,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953732866,2,Create post ,201,,Thread Group 1-8,text,true,,367,342,1,1,http://localhost:8080/api/posts,2,0,0
+1774953732868,11,Get All Posts,200,,Thread Group 1-8,text,true,,122430,195,1,1,http://localhost:8080/api/posts,10,0,0
+1774953733732,13,Create user,201,,Thread Group 1-9,text,true,,357,391,1,1,http://localhost:8080/api/users,13,0,2
+1774953733747,7,Login User,200,,Thread Group 1-9,text,true,,528,289,1,1,http://localhost:8080/api/users/login,6,0,0
+1774953733755,6,Create post ,201,,Thread Group 1-9,text,true,,368,343,1,1,http://localhost:8080/api/posts,6,0,0
+1774953733762,33,Get All Posts,200,,Thread Group 1-9,text,true,,122620,195,1,1,http://localhost:8080/api/posts,31,0,0
+1774953733795,5,Create user,201,,Thread Group 1-9,text,true,,357,391,1,1,http://localhost:8080/api/users,5,0,0
+1774953733800,2,Login User,200,,Thread Group 1-9,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953733803,2,Create post ,201,,Thread Group 1-9,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953733806,13,Get All Posts,200,,Thread Group 1-9,text,true,,122810,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953733820,2,Create user,201,,Thread Group 1-9,text,true,,356,391,1,1,http://localhost:8080/api/users,2,0,0
+1774953733822,3,Login User,200,,Thread Group 1-9,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953733825,3,Create post ,201,,Thread Group 1-9,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953733828,11,Get All Posts,200,,Thread Group 1-9,text,true,,123000,195,1,1,http://localhost:8080/api/posts,10,0,0
+1774953733840,3,Create user,201,,Thread Group 1-9,text,true,,357,391,1,1,http://localhost:8080/api/users,2,0,0
+1774953733843,2,Login User,200,,Thread Group 1-9,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953733845,3,Create post ,201,,Thread Group 1-9,text,true,,367,343,1,1,http://localhost:8080/api/posts,3,0,0
+1774953733848,13,Get All Posts,200,,Thread Group 1-9,text,true,,123196,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953733862,2,Create user,201,,Thread Group 1-9,text,true,,357,391,1,1,http://localhost:8080/api/users,2,0,0
+1774953733865,2,Login User,200,,Thread Group 1-9,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953733868,3,Create post ,201,,Thread Group 1-9,text,true,,368,343,1,1,http://localhost:8080/api/posts,3,0,0
+1774953733871,13,Get All Posts,200,,Thread Group 1-9,text,true,,123386,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953734732,8,Create user,201,,Thread Group 1-10,text,true,,357,391,1,1,http://localhost:8080/api/users,8,0,2
+1774953734741,1,Login User,200,,Thread Group 1-10,text,true,,528,289,1,1,http://localhost:8080/api/users/login,1,0,0
+1774953734743,1,Create post ,201,,Thread Group 1-10,text,true,,368,343,1,1,http://localhost:8080/api/posts,1,0,0
+1774953734744,11,Get All Posts,200,,Thread Group 1-10,text,true,,123577,195,1,1,http://localhost:8080/api/posts,10,0,0
+1774953734756,2,Create user,201,,Thread Group 1-10,text,true,,357,391,1,1,http://localhost:8080/api/users,2,0,0
+1774953734759,1,Login User,200,,Thread Group 1-10,text,true,,528,289,1,1,http://localhost:8080/api/users/login,1,0,0
+1774953734761,1,Create post ,201,,Thread Group 1-10,text,true,,368,343,1,1,http://localhost:8080/api/posts,1,0,0
+1774953734762,14,Get All Posts,200,,Thread Group 1-10,text,true,,123767,195,1,1,http://localhost:8080/api/posts,13,0,0
+1774953734776,3,Create user,201,,Thread Group 1-10,text,true,,356,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953734779,2,Login User,200,,Thread Group 1-10,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953734781,2,Create post ,201,,Thread Group 1-10,text,true,,367,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953734783,12,Get All Posts,200,,Thread Group 1-10,text,true,,123957,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953734795,3,Create user,201,,Thread Group 1-10,text,true,,357,391,1,1,http://localhost:8080/api/users,3,0,0
+1774953734798,2,Login User,200,,Thread Group 1-10,text,true,,528,289,1,1,http://localhost:8080/api/users/login,2,0,0
+1774953734800,2,Create post ,201,,Thread Group 1-10,text,true,,368,343,1,1,http://localhost:8080/api/posts,2,0,0
+1774953734802,13,Get All Posts,200,,Thread Group 1-10,text,true,,124147,195,1,1,http://localhost:8080/api/posts,11,0,0
+1774953734815,2,Create user,201,,Thread Group 1-10,text,true,,357,391,1,1,http://localhost:8080/api/users,2,0,0
+1774953734818,1,Login User,200,,Thread Group 1-10,text,true,,528,289,1,1,http://localhost:8080/api/users/login,1,0,0
+1774953734820,1,Create post ,201,,Thread Group 1-10,text,true,,367,342,1,1,http://localhost:8080/api/posts,1,0,0
+1774953734821,12,Get All Posts,200,,Thread Group 1-10,text,true,,124336,195,1,1,http://localhost:8080/api/posts,11,0,0

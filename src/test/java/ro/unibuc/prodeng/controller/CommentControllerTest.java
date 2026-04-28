@@ -14,6 +14,7 @@ import ro.unibuc.prodeng.exception.EntityNotFoundException;
 import ro.unibuc.prodeng.request.CreateCommentRequest;
 import ro.unibuc.prodeng.response.CommentResponse;
 import ro.unibuc.prodeng.service.CommentService;
+import ro.unibuc.prodeng.service.MetricsService;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,6 +30,9 @@ class CommentControllerTest {
 
     @Mock
     private CommentService commentService;
+    
+    @Mock
+    private MetricsService metricsService;
 
     @InjectMocks
     private CommentController commentController;
