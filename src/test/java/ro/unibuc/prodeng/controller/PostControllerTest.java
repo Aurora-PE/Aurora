@@ -15,6 +15,7 @@ import ro.unibuc.prodeng.model.VisibilityEnum;
 import ro.unibuc.prodeng.request.CreatePostRequest;
 import ro.unibuc.prodeng.request.UpdatePostRequest;
 import ro.unibuc.prodeng.response.PostResponse;
+import ro.unibuc.prodeng.service.MetricsService;
 import ro.unibuc.prodeng.service.PostService;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,9 @@ class PostControllerTest {
 
     @Mock
     private PostService postService;
+
+    @Mock
+    private MetricsService metricsService;
 
     @InjectMocks
     private PostController postController;
