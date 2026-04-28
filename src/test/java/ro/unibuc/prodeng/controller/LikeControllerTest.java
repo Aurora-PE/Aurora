@@ -13,6 +13,7 @@ import ro.unibuc.prodeng.exception.EntityNotFoundException;
 import ro.unibuc.prodeng.exception.GlobalExceptionHandler;
 import ro.unibuc.prodeng.exception.UnauthorizedException;
 import ro.unibuc.prodeng.service.LikeService;
+import ro.unibuc.prodeng.service.MetricsService;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -23,6 +24,9 @@ class LikeControllerTest {
 
     @Mock
     private LikeService likeService;
+
+    @Mock
+    private MetricsService metricsService;
 
     @InjectMocks
     private LikeController likeController;

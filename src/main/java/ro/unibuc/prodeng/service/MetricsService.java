@@ -23,6 +23,12 @@ public class MetricsService {
     private final Timer userLoginTimer;
     private final Timer notificationReadTimer;
 
+    private final Counter postsCreatedCounter;
+    private final Counter commentsCreatedCounter;
+    private final Counter likesGivenCounter;
+    private final Counter likesRemovedCounter;
+    private final Timer postCreationTimer;
+
     public MetricsService(MeterRegistry registry) {
         this.usersCreatedCounter = Counter.builder("app_users_created_total")
             .description("Total number of users created").register(registry);
@@ -58,6 +64,22 @@ public class MetricsService {
 
         this.unreadNotifications = registry.gauge("app_unread_notifications", new AtomicInteger(0));
 
+        this.postsCreatedCounter = Counter.builder("app_posts_created_total")
+            .description("Total number of posts created").register(registry);
+
+        this.commentsCreatedCounter = Counter.builder("app_comments_created_total")
+            .description("Total number of comments created").register(registry);
+
+        this.likesGivenCounter = Counter.builder("app_likes_given_total")
+            .description("Total number of likes given")
+            .tag("target", "unknown")
+            .register(registry);
+
+        this.likesRemovedCounter = Counter.builder("app_likes_removed_total")
+            .description("Total number of likes removed").register(registry);
+
+        this.postCreationTimer = Timer.builder("app_post_creation_duration_seconds")
+            .description("Time taken to create a post").register(registry);
     }
 
     public void recordUserCreated() { usersCreatedCounter.increment(); }
@@ -78,4 +100,10 @@ public class MetricsService {
     public Timer.Sample startTimer() { return Timer.start(); }
     public void stopLoginTimer(Timer.Sample sample) { sample.stop(userLoginTimer); }
     public void stopNotificationsReadTimer(Timer.Sample sample) { sample.stop(notificationReadTimer); }
+    
+    public void recordPostCreated() { postsCreatedCounter.increment(); }
+    public void recordCommentCreated() { commentsCreatedCounter.increment(); }
+    public void recordLikeGiven() { likesGivenCounter.increment(); }
+    public void recordLikeRemoved() { likesRemovedCounter.increment(); }
+    public void stopPostCreationTimer(Timer.Sample sample) { sample.stop(postCreationTimer); }
 }
