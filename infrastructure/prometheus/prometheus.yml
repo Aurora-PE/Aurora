@@ -30,6 +30,7 @@ rule_files:
   - container-alerts.yml
   - user-group-alerts.yml
   - notifications-messages-alerts.yml
+  - post-like-alerts.yml
 
 alerting:
   alertmanagers:
