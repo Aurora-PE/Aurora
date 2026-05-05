@@ -29,6 +29,7 @@ rule_files:
   - canary-alerts.yml
   - container-alerts.yml
   - user-group-alerts.yml
+  - post-like-alerts.yml
 
 alerting:
   alertmanagers:
