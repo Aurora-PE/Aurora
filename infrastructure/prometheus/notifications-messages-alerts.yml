@@ -1,0 +1,35 @@
+groups:
+  - name: MessageNotificationAlerts
+    rules:
+      - alert: CRITICAL-HighMessageTrafficDetected
+        expr: increase(app_messagess_total[1m]) > 5
+        for: 10s
+        labels:
+          severity: critical
+          category: availability
+          component: messages
+        annotations:
+          summary: "Message traffic detected"
+          description: "At least one message was created in the last minute."
+
+      - alert: WARNING-SlowNotificationRead
+        expr: rate(app_notification_read_duration_seconds_sum[1m]) / rate(app_notification_read_duration_seconds_count[1m]) > 0.001
+        for: 10s
+        labels:
+          severity: warning
+          category: performance
+          component: notifications
+        annotations:
+          summary: "Notification read latency detected"
+          description: "Average notification read duration is above 1ms."
+
+      - alert: WARNING-HighNotificationErrors
+        expr: increase(app_notifications_errors_total[1m]) > 0
+        for: 10s
+        labels:
+          severity: warning
+          category: quality
+          component: notifications
+        annotations:
+          summary: "Notification error detected"
+          description: "At least one notification-related error happened in the last minute."

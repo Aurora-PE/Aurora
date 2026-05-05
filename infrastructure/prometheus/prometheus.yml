@@ -28,6 +28,8 @@ rule_files:
   - app-alerts.yml
   - canary-alerts.yml
   - container-alerts.yml
+  - user-group-alerts.yml
+  - notifications-messages-alerts.yml
 
 alerting:
   alertmanagers:
