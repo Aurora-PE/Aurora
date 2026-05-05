@@ -1,0 +1,32 @@
+groups:
+  - name: UserAndGroupDomainAlerts
+    rules:
+
+      - alert: CRITICAL-ServiceDown
+        expr: up{job="spring-prod-eng-app"} == 0
+        for: 30s
+        labels:
+          severity: critical
+          category: availability
+        annotations:
+          summary: "Spring Boot App is DOWN"
+
+      - alert: WARNING-HighLoginLatency
+        expr: rate(app_user_login_duration_seconds_sum[2m]) / rate(app_user_login_duration_seconds_count[2m]) > 0.0001
+        for: 1m
+        labels:
+          severity: warning
+          category: performance
+        annotations:
+          summary: "High Login Latency Detected"
+          description: "Average login time is above threshold. Current average: {{ $value }}s"
+
+      - alert: CRITICAL-HighDomainErrors
+        expr: increase(app_domain_errors_total[1m]) >= 3
+        for: 1m
+        labels:
+          severity: critical
+          category: quality
+        annotations:
+          summary: "High User/Group Domain Errors"
+          description: "There have been {{ $value }} exceptions thrown in the last minute."
