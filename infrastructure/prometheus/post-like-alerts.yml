@@ -1,0 +1,55 @@
+groups:
+  - name: PostsAndLikesAlerts
+    rules:
+
+
+      - alert: WARNING-HighPostCreationLatency
+        expr: rate(app_post_creation_duration_seconds_sum[2m]) / rate(app_post_creation_duration_seconds_count[2m]) > 0.0
+        for: 10s
+        labels:
+          severity: warning
+          category: performance
+        annotations:
+          summary: "Post creation is slow (avg {{ $value }}s)"
+          description: "Average post creation duration exceeded over the last 2 minutes.\n  VALUE = {{ $value }}s\n  LABELS = {{ $labels }}"
+
+
+      - alert: WARNING-PostCreationSpike
+        expr: rate(app_posts_total[1m]) > 0
+        for: 10s
+        labels:
+          severity: warning
+          category: quality
+        annotations:
+          summary: "Unusual post creation rate ({{ $value }} posts/s)"
+          description: "Posts are being created faster than 2/s over the last minute. Possible bot or spam activity.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: WARNING-CommentSpike
+        expr: rate(app_comments_total[1m]) > 0
+        for: 10s
+        labels:
+          severity: warning
+          category: quality
+        annotations:
+          summary: "Unusual comment creation rate ({{ $value }} comments/s)"
+          description: "Comments are being created faster than 2/s over the last minute. Possible spam or scripted abuse.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: WARNING-LikesGivenSpike
+        expr: rate(app_likes_given_total[1m]) > 0
+        for: 10s
+        labels:
+          severity: warning
+          category: quality
+        annotations:
+          summary: "Unusual likes-given rate ({{ $value }} likes/s)"
+          description: "Likes are being given faster than 2/s over the last minute. Possible bot, scripted abuse, or like-farming.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+      - alert: WARNING-LikesRemovedSpike
+        expr: rate(app_likes_removed_total[1m]) > 0
+        for: 10s
+        labels:
+          severity: warning
+          category: quality
+        annotations:
+          summary: "Unusual likes-removed rate ({{ $value }} unlikes/s)"
+          description: "Likes are being removed faster than 2/s over the last minute. May indicate UI bug, mass-unlike behavior, or scripted abuse.\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
